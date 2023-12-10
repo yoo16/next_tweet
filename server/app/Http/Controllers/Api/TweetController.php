@@ -12,4 +12,10 @@ class TweetController extends Controller
         $tweets = Tweet::get();
         return response()->json($tweets);
     }
+
+    function add(Request $request) : String {
+        $tweet = Tweet::create($request->all());
+        return response()->json($tweet);
+    }
+
 }

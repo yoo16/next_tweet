@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('tweets', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->dateTime('created_at', $precision = 0);
+            $table->dateTime('updated_at', $precision = 0);
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->text('message');
         });
     }
 

@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 
 class TweetController extends Controller
 {
-    function get() : String {
-        $tweets = Tweet::get();
+    function get() {
+        $tweets = Tweet::orderBy('created_at', 'desc')->get();
         return response()->json($tweets);
     }
 
-    function add(Request $request) : String {
+    function add(Request $request) {
         $tweet = Tweet::create($request->all());
         return response()->json($tweet);
     }

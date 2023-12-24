@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 
+
 const LoginPage = () => {
-    const AUTH_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "login/auth";
+    const AUTH_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "auth";
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const auth = async () => {
         try {
@@ -14,41 +16,49 @@ const LoginPage = () => {
                 email: email,
                 password: password
             };
+            const json = JSON.stringify(data);
             const response = await fetch(AUTH_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', },
-                body: JSON.stringify(data),
+                body: json,
             });
+            if (response.ok) {
+                const result = await response.json();
+                localStorage.setItem('access_token', result.access_token);
+                const accessToken = localStorage.getItem('access_token');
+                console.log('access token:', accessToken);
+            } else {
+                const error = await response.json();
+                setErrorMessage('Emailまたはパスワードが間違っています');
+                console.log(error);
+            }
         } catch (error) {
             console.error('Failed to send data:', error);
         }
     }
 
     return (
-        <div>
+        <div className="mx-auto w-1/2">
             <input
                 type="text"
-                className='bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 m-3 max-w-sm'
+                className='border-2 border-gray-200 rounded w-full p-3 focus:outline-none focus:bg-white focus:border-blue-500 m-3'
                 placeholder='email'
-                onChange={(e) => {
-                    setEmail(e.target.value);
-                }}
+                onChange={(e) => { setEmail(e.target.value); }}
             /><br />
             <input
-                type="text"
-                className='bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 m-3 max-w-sm'
+                type="password"
+                className="border-2 border-gray-200 rounded w-full p-3 focus:outline-none focus:bg-white focus:border-blue-500 m-3"
                 placeholder='password'
-                onChange={(e) => {
-                    setPassword(e.target.value);
-                }}
+                onChange={(e) => { setPassword(e.target.value); }}
             />
+            <div className="p-4 text-red-600">
+                {errorMessage}
+            </div>
             <div>
                 <button
-                    className="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded m-3"
-                    onClick={() => {
-                        auth();
-                    }}
-                >送信</button>
+                    className="w-full bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white py-2 px-4 rounded-lg m-3"
+                    onClick={() => { auth(); }}
+                >Login</button>
             </div>
         </div>
     );

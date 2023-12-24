@@ -1,8 +1,12 @@
 "use client"
 
+// import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Tweet } from './models/Tweet';
 import TweetList from './components/TweetList';
+// import useLocalStorage from "@/useLocalStorage";
+
 
 export default function Home() {
   const TWEET_GET_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "tweet/get";
@@ -11,6 +15,17 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [tweet, setTweet] = useState<Tweet>();
   const [tweets, setTweets] = useState<Tweet[]>([]);
+
+  const router = useRouter();
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        router.push('/login');
+      }
+    };
+    checkLoginStatus();
+  }, [router]);
 
   const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(event.target.value);
@@ -22,10 +37,11 @@ export default function Home() {
         message: message,
         user_id: 1
       };
+      const json = JSON.stringify(data);
       const response = await fetch(TWEET_ADD_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
-        body: JSON.stringify(data),
+        body: json,
       });
 
       if (response.ok) {
@@ -40,7 +56,6 @@ export default function Home() {
 
   useEffect(() => {
     const getTweets = async () => {
-      console.log("getTweets()");
       try {
         const response = await fetch(TWEET_GET_URL);
         if (response.ok) {
@@ -65,3 +80,24 @@ export default function Home() {
   )
 
 }
+
+// export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
+//   const cookies = nookies.get(context);
+//   const accessToken = cookies.session;
+
+//   if (!accessToken) {
+//     return {
+//       redirect: {
+//         permanent: false,
+//         destination: '/login',
+//       },
+
+//       props: {} as never,
+//     };
+//   }
+
+//   return {
+//     props: {
+//     },
+//   };
+// }

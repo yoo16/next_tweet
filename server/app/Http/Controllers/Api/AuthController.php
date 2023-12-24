@@ -23,10 +23,10 @@ class AuthController extends Controller
                     'token_type' => 'Bearer',
                 ]);
             } else {
-                return response()->json(['message' => 'Auth error'], 401);
+                return response()->json(['error' => 'Auth error'], 401);
             }
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Server error'], 500);
+            return response()->json(['error' => 'Server error'], 500);
         }
     }
 }

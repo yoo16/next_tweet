@@ -8,10 +8,15 @@ const Navbar = () => {
           <span className="self-center text-2xl font-semibold">Next Tweet</span>
         </Link>
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
-          <ul>
+          <ul className='flex flex-wrap'>
             <li>
               <Link href="/profile" className="py-2 px-3">
                 Profile
+              </Link>
+            </li>
+            <li>
+              <Link href="/login" className="py-2 px-3">
+                Login
               </Link>
             </li>
           </ul>

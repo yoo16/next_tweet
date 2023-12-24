@@ -30,6 +30,7 @@ export default function Home() {
 
       if (response.ok) {
         const data = await response.json();
+        setTweet(data);
         setTweets([data, ...tweets]);
       }
     } catch (error) {
@@ -39,6 +40,7 @@ export default function Home() {
 
   useEffect(() => {
     const getTweets = async () => {
+      console.log("getTweets()");
       try {
         const response = await fetch(TWEET_GET_URL);
         if (response.ok) {
@@ -46,12 +48,12 @@ export default function Home() {
           setTweets(data);
         }
       } catch (error) {
-        console.error('Failed to send data:', error);
+        console.error('Failed to fetch data:', error);
       }
-    }
+    };
 
     getTweets();
-  }, [tweet]);
+  }, []);
 
   return (
     <div>

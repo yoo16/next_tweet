@@ -10,9 +10,13 @@ const TweetList = ({ tweets }: TweetListProps) => {
     // console.log("TweetList:", tweets)
     return (
         <div>
-            {Array.isArray(tweets) && tweets.map((tweet, index) => (
-                <p key={tweet.id}>{tweet.message}</p>
-            ))}
+            {tweets && tweets.length > 0 ? (
+                tweets.map((tweet, index) => (
+                    <p key={tweet.id}>{tweet.message}</p>
+                ))
+            ) : (
+                <p>Loading...</p>
+            )}
         </div>
     );
 }

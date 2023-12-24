@@ -5,4 +5,3 @@ export interface Tweet {
     created_at: string;
     updated_at: string;
 }
-

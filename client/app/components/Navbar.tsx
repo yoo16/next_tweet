@@ -1,6 +1,15 @@
+"use client";
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { User } from '@/app/models/User';
 
 const Navbar = () => {
+  const router = useRouter();
+  const logout = () => {
+    localStorage.removeItem('access_token');
+    router.push('/login');
+  }
   return (
     <nav>
       <div className="flex flex-wrap items-center mx-auto p-4">
@@ -18,6 +27,11 @@ const Navbar = () => {
               <Link href="/login" className="py-2 px-3">
                 Login
               </Link>
+            </li>
+            <li>
+              <a onClick={logout} className="py-2 px-3">
+                Logout
+              </a>
             </li>
           </ul>
         </div>

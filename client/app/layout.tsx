@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react';
 import './globals.css'
 import Navbar from './components/Navbar';
 
@@ -10,16 +11,17 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
 }) {
   return (
     <html lang="ja">
       <body>
-        {/* NabBarコンポーネント読み込み */}
         <Navbar />
-        <main className="flex min-h-screen flex-col p-2">
-          {children}
-        </main>
+        <Suspense>
+          <main className="flex min-h-screen flex-col p-5">
+            {children}
+          </main>
+        </Suspense>
       </body>
     </html>
   )

@@ -9,8 +9,25 @@
 
 a {
   color: rgb(var(--link-rgb));
+  cursor: pointer;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
+}
+
+.tweet {
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.profile-image {
+  padding: 5px;
+  margin: 0;
+}
+
+.profile-image img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
 }

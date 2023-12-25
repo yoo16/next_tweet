@@ -1,103 +1,50 @@
 "use client"
 
-// import { useRouter } from 'next/router';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Tweet } from './models/Tweet';
-import TweetList from './components/TweetList';
-// import useLocalStorage from "@/useLocalStorage";
-
+import { useEffect, useState, Suspense, lazy } from 'react';
+import { useRouter, redirect } from 'next/navigation';
+import type { User } from '@/app/models/User';
+import TweetList from './components/tweet/TweetList';
 
 export default function Home() {
-  const TWEET_GET_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "tweet/get";
-  const TWEET_ADD_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "tweet/add";
-
-  const [message, setMessage] = useState("");
-  const [tweet, setTweet] = useState<Tweet>();
-  const [tweets, setTweets] = useState<Tweet[]>([]);
-
   const router = useRouter();
+  const [user, setUser] = useState<User>();
+  const [token, setToken] = useState<string>("");
+
   useEffect(() => {
-    const checkLoginStatus = async () => {
+    const checkUser = async () => {
+      const USER_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "user";
       const token = localStorage.getItem('access_token');
+      console.log("checkUser():", token)
       if (!token) {
-        router.push('/login');
+        return router.push('/login');
       }
-    };
-    checkLoginStatus();
-  }, [router]);
-
-  const handleMessageChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(event.target.value);
-  };
-
-  const sendMessage = async () => {
-    try {
-      const data = {
-        message: message,
-        user_id: 1
-      };
-      const json = JSON.stringify(data);
-      const response = await fetch(TWEET_ADD_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', },
-        body: json,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setTweet(data);
-        setTweets([data, ...tweets]);
-      }
-    } catch (error) {
-      console.error('Failed to send data:', error);
-    }
-  };
-
-  useEffect(() => {
-    const getTweets = async () => {
       try {
-        const response = await fetch(TWEET_GET_URL);
+        const response = await fetch(USER_URL, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
         if (response.ok) {
-          const data = await response.json();
-          setTweets(data);
+          const user = await response.json();
+          setUser(user);
+        } else {
+          router.push('/login');
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.log(error)
       }
     };
-
-    getTweets();
-  }, []);
+    checkUser();
+  }, [router]);
 
   return (
     <div>
-      <textarea onChange={handleMessageChange} className="resize-none w-full h-24 border rounded-md p-2" placeholder="今なにしてる？"></textarea>
-      <button onClick={sendMessage} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded rounded-lg">Send</button>
-
-      <TweetList tweets={tweets} />
+      <Suspense fallback={<p className='bg-red-500'>Loading...</p>}>
+        <TweetList user={user} />
+      </Suspense>
     </div>
   )
 
 }
-
-// export const getServerSideProps: GetServerSideProps = async (context: GetServerSidePropsContext) => {
-//   const cookies = nookies.get(context);
-//   const accessToken = cookies.session;
-
-//   if (!accessToken) {
-//     return {
-//       redirect: {
-//         permanent: false,
-//         destination: '/login',
-//       },
-
-//       props: {} as never,
-//     };
-//   }
-
-//   return {
-//     props: {
-//     },
-//   };
-// }

@@ -3,7 +3,8 @@
 import { useEffect, useState, Suspense, lazy } from 'react';
 import { useRouter, redirect } from 'next/navigation';
 import type { User } from '@/app/models/User';
-import TweetList from './components/tweet/TweetList';
+import TweetList from '@/app/components/tweet/TweetList';
+import TweetForm from '@/app/components/tweet/TweetForm';
 
 export default function Home() {
   const router = useRouter();
@@ -42,7 +43,12 @@ export default function Home() {
   return (
     <div>
       <Suspense fallback={<p className='bg-red-500'>Loading...</p>}>
-        <TweetList user={user} />
+        {user &&
+          <div>
+            <TweetForm user={user} />
+            <TweetList />
+          </div>
+        }
       </Suspense>
     </div>
   )

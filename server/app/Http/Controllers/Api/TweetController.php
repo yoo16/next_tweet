@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TweetRequest;
 use App\Models\Tweet;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TweetController extends Controller
 {
@@ -17,7 +17,13 @@ class TweetController extends Controller
 
     function add(TweetRequest $request)
     {
-        $tweet = Tweet::create($request->all());
-        return response()->json($tweet);
+        $user = $request->user();
+        if ($user && $request->user_id == $user->id) {
+            $tweet = Tweet::create($request->all());
+            $tweet->user = $user;
+            return response()->json($tweet);
+        } else {
+            return response()->json(['error' => 'invalid tweet'], 401);
+        }
     }
 }

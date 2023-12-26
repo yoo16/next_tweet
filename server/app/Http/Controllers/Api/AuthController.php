@@ -29,4 +29,23 @@ class AuthController extends Controller
             return response()->json(['error' => 'Server error'], 500);
         }
     }
+    public function regist(Request $request)
+    {
+        try {
+            $credentials = $request->only('email', 'password');
+            if (Auth::attempt($credentials)) {
+                $user = User::where('email', $request['email'])->firstOrFail();
+                $token = $user->createToken('auth_token')->plainTextToken;
+                return response()->json([
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ]);
+            } else {
+                return response()->json(['error' => 'Regist error'], 401);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Server error'], 500);
+        }
+    }
+
 }

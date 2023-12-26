@@ -5,8 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 
-Route::get('/tweet/get', [TweetController::class, 'get']);
-Route::post('/tweet/add', [TweetController::class, 'add']);
+Route::middleware('auth:sanctum')->get('/tweet/get', [TweetController::class, 'get']);
+Route::middleware('auth:sanctum')->post('/tweet/add', [TweetController::class, 'add']);
 
 Route::post('/auth', [AuthController::class, 'auth']);
 

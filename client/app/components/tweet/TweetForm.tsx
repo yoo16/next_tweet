@@ -6,15 +6,17 @@ import type { User } from '@/app/models/User';
 
 interface TweetFormProps {
     user: User;
+    handleNewTweet: any;
 }
 
-const TweetForm = ({ user, }: TweetFormProps) => {
+const TweetForm = ({ user, handleNewTweet }: TweetFormProps) => {
     const [tweets, setTweets] = useState<Tweet[]>([]);
     const [message, setMessage] = useState("");
 
     const sendMessage = async () => {
         if (!user || user.id == undefined) return;
         const TWEET_ADD_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "tweet/add";
+        const token = localStorage.getItem('access_token');
         const data = {
             message: message,
             user_id: user?.id
@@ -23,14 +25,18 @@ const TweetForm = ({ user, }: TweetFormProps) => {
         try {
             const response = await fetch(TWEET_ADD_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', },
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
                 body: json,
             });
             if (response.ok) {
                 const data = await response.json();
                 console.log(data)
                 if (!data.error) {
-                    setTweets([data, ...tweets]);
+                    // setTweets([data, ...tweets]);
+                    handleNewTweet(data);
                     setMessage("");
                 }
             }

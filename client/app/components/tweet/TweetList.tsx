@@ -2,32 +2,28 @@
 
 import { useEffect, useState, createContext, useContext, Suspense } from 'react';
 import TweetDetail from '@/app/components/tweet/TweetDetail';
-import type { Tweet } from '@/app/models/Tweet';
-import type { User } from '@/app/models/User';
+import { Tweet, getTweets } from '@/app/models/Tweet';
 
 interface TweetListProps {
-    user: User;
+    newTweet: Tweet | undefined;
 }
 
-const TweetList = () => {
+const TweetList = ({ newTweet }: TweetListProps) => {
     const [tweets, setTweets] = useState<Tweet[]>([]);
 
     useEffect(() => {
-        const getTweets = async () => {
-            console.debug("getTweets")
-            const TWEET_GET_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "tweet/get";
-            try {
-                const response = await fetch(TWEET_GET_URL);
-                if (response.ok) {
-                    const data = await response.json();
-                    setTweets(data);
-                }
-            } catch (error) {
-                console.error('Failed to fetch data:', error);
+        const loadTweets = async () => {
+            if (newTweet) {
+                console.log('TweetList: new tweet')
+                setTweets([newTweet, ...tweets]);
+            } else {
+                console.log('TweetList: getTweets()')
+                const tweets = await getTweets();
+                setTweets(tweets);
             }
-        };
-        getTweets();
-    }, []);
+        }
+        loadTweets();
+    }, [newTweet]);
 
     return (
         <div>

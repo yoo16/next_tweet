@@ -24,6 +24,11 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
+              <Link href="/regist" className="py-2 px-3">
+                Register
+              </Link>
+            </li>
+            <li>
               <Link href="/login" className="py-2 px-3">
                 Login
               </Link>

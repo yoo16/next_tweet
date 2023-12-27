@@ -14,10 +14,8 @@ const TweetList = ({ newTweet }: TweetListProps) => {
     useEffect(() => {
         const loadTweets = async () => {
             if (newTweet) {
-                console.log('TweetList: new tweet')
                 setTweets([newTweet, ...tweets]);
             } else {
-                console.log('TweetList: getTweets()')
                 const tweets = await getTweets();
                 setTweets(tweets);
             }

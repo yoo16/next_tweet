@@ -12,14 +12,14 @@ export default function Home() {
   const [user, setUser] = useState<User>();
   const [tweet, setTweet] = useState<Tweet>();
 
-  const handleNewTweet = (tweet:Tweet) => {
-    setTweet(tweet);
+  const handleNewTweet = async (data: Tweet) => {
+    setTweet(data);
   }
 
   useEffect(() => {
     const checkUser = async () => {
-      const user = await getUser();
-      (user == undefined) ? router.push('/login') : setUser(user);
+      const data = await getUser();
+      (data == undefined) ? router.push('/login') : setUser(data);
     }
     checkUser();
   }, [router]);
@@ -34,5 +34,4 @@ export default function Home() {
       }
     </Suspense>
   )
-
 }

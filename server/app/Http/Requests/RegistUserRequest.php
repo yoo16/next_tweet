@@ -5,23 +5,21 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Models\User;
 
-class RegistUser extends FormRequest
+class RegistUserRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     public function rules(): array
     {
         return [
-            'name' => 'required',
-            'email' => 'required|exists:users,email',
-            'password' => 'required',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password' => ['required', 'max:255'],
         ];
     }
     public function failedValidation(Validator $validator)

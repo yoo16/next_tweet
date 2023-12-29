@@ -11,7 +11,10 @@ class TweetController extends Controller
 {
     function get()
     {
-        $tweets = Tweet::with('user')->orderBy('created_at', 'desc')->limit(25)->get();
+        $tweets = Tweet::with('user')
+            ->orderBy('created_at', 'desc')
+            ->limit(25)
+            ->get();
         return response()->json($tweets);
     }
 

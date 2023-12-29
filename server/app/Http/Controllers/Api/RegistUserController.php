@@ -21,10 +21,10 @@ class RegistUserController extends Controller
 
         if ($user) {
             return response()->json([
-                'access_token' => User::getToken($request),
+                'access_token' => User::auth($request),
                 'token_type' => 'Bearer',
             ]);
         }
-        return response()->json(['error' => 'Auth error'], 401);
+        return response()->json(['error' => ['message' => 'invalid auth']]);
     }
 }

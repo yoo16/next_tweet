@@ -12,14 +12,12 @@ class AuthController extends Controller
     public function auth(Request $request)
     {
         try {
-            if ($token = User::getToken($request)) {
-                return response()->json([
-                    'access_token' => $token,
-                    'token_type' => 'Bearer',
-                ]);
+            if ($token = User::auth($request)) {
+                $data = ['access_token' => $token, 'token_type' => 'Bearer',];
             } else {
-                return response()->json(['error' => ['auth' => 'email or password error.']]);
+                $data = ['error' => ['auth' => 'email or password error.']];
             }
+            return response()->json($data);
         } catch (Exception $e) {
             return response()->json(['error' => ['auth' => 'Server error']], 500);
         }

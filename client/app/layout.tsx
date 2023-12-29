@@ -17,11 +17,9 @@ export default function RootLayout({
     <html lang="ja">
       <body>
         <Navbar />
-        <Suspense>
-          <main className="flex min-h-screen flex-col p-5">
-            {children}
-          </main>
-        </Suspense>
+        <main className="flex min-h-screen flex-col p-5">
+          {children}
+        </main>
       </body>
     </html>
   )

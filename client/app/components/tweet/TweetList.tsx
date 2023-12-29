@@ -2,25 +2,29 @@
 
 import { useEffect, useState, createContext, useContext, Suspense } from 'react';
 import TweetDetail from '@/app/components/tweet/TweetDetail';
-import { Tweet, getTweets } from '@/app/models/Tweet';
+import { Tweet } from '@/app/models/Tweet';
+import { GetTweets, PostTweet } from '@/app/services/TweetService';
 
 interface TweetListProps {
-    newTweet: Tweet | undefined;
+    newTweet: Tweet;
 }
 
 const TweetList = ({ newTweet }: TweetListProps) => {
     const [tweets, setTweets] = useState<Tweet[]>([]);
 
     useEffect(() => {
-        const loadTweets = async () => {
-            if (newTweet) {
-                setTweets([newTweet, ...tweets]);
-            } else {
-                const tweets = await getTweets();
-                setTweets(tweets);
+        (async () => {
+            const tweets = await GetTweets();
+            setTweets(tweets);
+        })();
+    }, []);
+
+    useEffect(() => {
+        (async () => {
+            if (newTweet.id > 0) {
+                setTweets(tweets => [newTweet, ...tweets]);
             }
-        }
-        loadTweets();
+        })();
     }, [newTweet]);
 
     return (

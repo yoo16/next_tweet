@@ -1,15 +1,8 @@
-"use client";
-
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { User } from '@/app/models/User';
 
 const Navbar = () => {
-  const router = useRouter();
-  const logout = () => {
-    localStorage.removeItem('access_token');
-    router.push('/login');
-  }
+  console.log('Navbar is Server Component')
+
   return (
     <nav>
       <div className="flex flex-wrap items-center mx-auto p-4">
@@ -19,7 +12,7 @@ const Navbar = () => {
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
           <ul className='flex flex-wrap'>
             <li>
-              <Link href="/profile" className="py-2 px-3">
+              <Link href="/user/profile" className="py-2 px-3">
                 Profile
               </Link>
             </li>
@@ -34,7 +27,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <a onClick={logout} className="py-2 px-3">
+              <a href='/user/logout' className="py-2 px-3">
                 Logout
               </a>
             </li>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, Suspense } from 'react';
-import { User } from '@/app/models/User';
+import { useState } from 'react';
+import RegistUser from '@/app/services/RegistUser';
 import { useRouter } from 'next/navigation';
 
 export interface Error {
@@ -10,38 +10,15 @@ export interface Error {
     password: string;
 }
 
-export const registUser = async (name: string, email: string, password: string) => {
-    var token = "";
-    try {
-        const AUTH_URL = process.env.NEXT_PUBLIC_API_BASE_URL + "regist/store";
-        const response = await fetch(AUTH_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', },
-            body: JSON.stringify({
-                name: name,
-                email: email,
-                password: password,
-            }),
-        });
-        if (response.ok) {
-            const result = await response.json();
-            console.log(result);
-            return result;
-        }
-    } catch (error) {
-        console.error('Failed to send data:', error);
-    }
-}
-
 function RegistPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState<Error>({ name: "", email: "", password: "" });
+    const [error, setError] = useState<Error>({ name: name, email: email, password: password });
     const router = useRouter();
 
     const regist = async () => {
-        var result = await registUser(name, email, password);
+        var result = await RegistUser(name, email, password);
         if (result.error) {
             setError(result.error);
         } else {
@@ -52,7 +29,7 @@ function RegistPage() {
 
     return (
         <div className="mx-auto w-1/2">
-            <h2 className="p-3 text-2xl text-center">Sign in</h2>
+            <h2 className="p-3 text-2xl text-center">Sign up</h2>
             <input
                 type="text"
                 className='border-2 border-gray-200 rounded w-full p-3 focus:outline-none focus:bg-white focus:border-blue-500'
@@ -78,7 +55,7 @@ function RegistPage() {
                 <button
                     className='w-full bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white py-2 px-4 rounded-lg'
                     onClick={() => { regist(); }}
-                >Login</button>
+                >Sign up</button>
             </div>
         </div>
     );

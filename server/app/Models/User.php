@@ -1,8 +1,5 @@
 <?php
-
 namespace App\Models;
-
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -31,7 +28,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    static function getToken(Request $request): string
+    static function auth(Request $request): string
     {
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {

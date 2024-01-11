@@ -17,7 +17,7 @@ const TweetDetail = ({ tweet }: TweetDetailProps) => {
         <div>
             <div className="tweet d-flex">
                 <div className="profile-image">
-                    <Image src={imageMe} className="profile-image" alt="" />
+                    <Image src={imageMe} alt="" />
                 </div>
 
                 <div className="tweet-body">

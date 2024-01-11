@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthUser } from "@/app/services/UserService";
 
@@ -19,7 +19,6 @@ const LoginPage = () => {
         if (result.error) {
             setError(result.error);
         } else {
-            localStorage.setItem('access_token', result.access_token);
             router.push('/');
         }
     }
@@ -43,7 +42,7 @@ const LoginPage = () => {
             <div>
                 <button
                     className='w-full bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white py-2 px-4 rounded-lg'
-                    onClick={() => { auth(); }}
+                    onClick={auth}
                 >Sign in</button>
             </div>
         </div>

@@ -7,6 +7,12 @@ export interface User {
     updated_at: string;
 }
 
+export interface PostUser {
+    name: string; 
+    email: string;
+    password: string;
+};
+
 export const initialUser: User = {
     id: 0,
     name: '',

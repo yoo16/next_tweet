@@ -2,17 +2,33 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User } from '@/app/models/User';
+import { User, initialUser } from '@/app/models/User';
+import { GetUser, getAccessToken } from '@/app/services/UserService';
 import { Tweet, initialTweet } from '@/app/models/Tweet';
 import TweetList from '@/app/components/tweet/TweetList';
 import TweetForm from '@/app/components/tweet/TweetForm';
 import { PostTweet } from '@/app/services/TweetService';
-import { GetUser } from '@/app/services/UserService';
+import { useUserContext } from '@/app/context/UserContext';
+// import { useSession } from 'next-auth/react';
 
 export default function Home() {
   const router = useRouter();
-  const [user, setUser] = useState<User>();
+  // const user: User = useUserContext();
+  // const { data: session } = useSession();
+  // console.log(session)
+
+  const [user, setUser] = useState<User>(initialUser);
   const [tweet, setTweet] = useState<Tweet>(initialTweet);
+
+  useEffect(() => {
+    (async () => {
+      const data = await GetUser();
+      if (!data) router.push('/login');
+      setUser(data);
+    })();
+  }, [router]);
+
+  console.log("----Home----", user);
 
   const onPostTweet = async (message: string) => {
     if (user) {
@@ -20,13 +36,6 @@ export default function Home() {
       setTweet(data);
     }
   }
-
-  useEffect(() => {
-    (async () => {
-      var data = await GetUser();
-      (data) ? setUser(data) : router.push('/login');
-    })();
-  }, [router]);
 
   return (
     <div>

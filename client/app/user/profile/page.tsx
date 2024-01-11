@@ -4,14 +4,13 @@ import { User } from '@/app/models/User';
 import { GetUser } from '@/app/services/UserService';
 import { useState, useEffect } from 'react'
 
-
 const ProfilePage = () => {
     const [user, setUser] = useState<User>();
 
     useEffect(() => {
         (async () => {
-            var user: User = await GetUser();
-            setUser(user);
+            // var user: User = await GetUser();
+            // setUser(user);
         })();
     }, []);
 

@@ -27,6 +27,7 @@ export const PostTweet = async (user: User, message: string) => {
 
 export const GetTweets = async () => {
     const token = localStorage.getItem('access_token');
+    if (!token) return;
     try {
         const response = await fetch(TWEET_GET_URL, {
             method: 'GET',

@@ -1,10 +1,14 @@
+import { PostUser } from '@/app/models/User';
+import Cookies from 'js-cookie';
+
 const URL_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-const USER_URL = URL_BASE + "user";
+const REGIST_URL = URL_BASE + "regist/store";
 const AUTH_URL = URL_BASE + "auth";
+const USER_URL = URL_BASE + "user";
 
 export const GetUser = async () => {
-    const token = localStorage.getItem('access_token');
     try {
+        const token = getAccessToken()
         const response = await fetch(USER_URL, {
             method: 'GET',
             headers: {
@@ -16,8 +20,17 @@ export const GetUser = async () => {
             return await response.json();
         }
     } catch (error) {
-
+        console.error(error);
     }
+}
+
+export const getAccessToken = () => {
+    var data = Cookies.get('access_token');
+    return (data) ? data : "";
+}
+
+export const setAccessToken = (value:string) => {
+    Cookies.set('access_token', value, { expires: 100, path: '/' });
 }
 
 export const AuthUser = async (email: string, password: string) => {
@@ -29,31 +42,29 @@ export const AuthUser = async (email: string, password: string) => {
         });
         if (response.ok) {
             const result = await response.json();
+            if (result.access_token) setAccessToken(result.access_token);
             return result;
         }
     } catch (error) {
-        console.error('Failed to send data:', error);
+        console.error(error);
     }
 }
 
-export const RegistUser = async (name: string, email: string, password: string) => {
-    var token = "";
+export const signOut = () => {
+    Cookies.remove('access_token');
+}
+
+export const RegistUser = async (postUser: PostUser) => {
     try {
-        const response = await fetch(AUTH_URL, {
+        const response = await fetch(REGIST_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', },
-            body: JSON.stringify({
-                name: name,
-                email: email,
-                password: password,
-            }),
+            body: JSON.stringify(postUser),
         });
         if (response.ok) {
-            const result = await response.json();
-            console.log(result);
-            return result;
+            return await response.json();
         }
     } catch (error) {
-        console.error('Failed to send data:', error);
+        console.error(error);
     }
 }

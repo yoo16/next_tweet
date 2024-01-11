@@ -24,7 +24,8 @@ class RegistUserController extends Controller
                 'access_token' => User::auth($request),
                 'token_type' => 'Bearer',
             ]);
+        } else {
+            return response()->json(['error' => ['message' => 'invalid auth']]);
         }
-        return response()->json(['error' => ['message' => 'invalid auth']]);
     }
 }

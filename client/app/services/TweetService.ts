@@ -1,18 +1,18 @@
 const URL_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-const TWEET_ADD_URL = URL_BASE + "tweet/add";
-const TWEET_GET_URL = URL_BASE + "tweet/get";
 
 import { User } from '@/app/models/User'
 
-export const PostTweet = async (user: User, message: string) => {
-    if (!user || user.id == undefined) return;
-    const token = localStorage.getItem('access_token');
-    if (!token) return;
+export const postTweet = async (user: User, message: string) => {
+    if (!user.accessToken) return;
     try {
-        const response = await fetch(TWEET_ADD_URL, {
+        var url = URL_BASE + "tweet/add";
+        console.log('--- postTweet ---')
+        console.log(url)
+        console.log(user)
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${user.accessToken}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ message: message, user_id: user.id }),
@@ -25,14 +25,15 @@ export const PostTweet = async (user: User, message: string) => {
     }
 };
 
-export const GetTweets = async () => {
-    const token = localStorage.getItem('access_token');
-    if (!token) return;
+export const getTweets = async (user: User) => {
+    console.log("getTweets:", user)
+    if (!user.accessToken) return;
     try {
-        const response = await fetch(TWEET_GET_URL, {
+        const url = URL_BASE + "tweet/get";
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${user.accessToken}`,
                 'Content-Type': 'application/json',
             },
         });

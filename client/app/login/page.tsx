@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { AuthUser } from "@/app/services/UserService";
+import { authUser } from "@/app/services/UserService";
 
 export interface Error {
     auth: string;
@@ -15,7 +15,7 @@ const LoginPage = () => {
     const router = useRouter();
 
     const auth = async () => {
-        const result = await AuthUser(email, password);
+        const result = await authUser({ email, password });
         if (result.error) {
             setError(result.error);
         } else {

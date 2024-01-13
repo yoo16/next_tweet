@@ -1,7 +1,7 @@
 "use client"
 
 import { User } from '@/app/models/User';
-import { GetUser } from '@/app/services/UserService';
+import { getUser } from '@/app/services/UserService';
 import { useState, useEffect } from 'react'
 
 const ProfilePage = () => {

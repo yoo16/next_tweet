@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { RegistUser } from '@/app/services/UserService';
+import { registUser } from '@/app/services/UserService';
 import { useRouter } from 'next/navigation';
 
 export interface Error {
@@ -24,7 +24,7 @@ function RegistPage() {
     const router = useRouter();
 
     const regist = async () => {
-        var result = await RegistUser({ name, email, password });
+        var result = await registUser({ name, email, password });
         if (result.error) {
             setError(result.error);
         } else {

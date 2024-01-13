@@ -5,6 +5,7 @@ export interface User {
     password: string;
     created_at: string;
     updated_at: string;
+    accessToken: string;
 }
 
 export interface PostUser {
@@ -20,4 +21,5 @@ export const initialUser: User = {
     password: '',
     created_at: '',
     updated_at: '',
+    accessToken: '',
 };

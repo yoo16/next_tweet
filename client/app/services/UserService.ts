@@ -1,15 +1,12 @@
 import { PostUser } from '@/app/models/User';
 import Cookies from 'js-cookie';
 
-const URL_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-const REGIST_URL = URL_BASE + "regist/store";
-const AUTH_URL = URL_BASE + "auth";
-const USER_URL = URL_BASE + "user";
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const GetUser = async () => {
+export const tokenUser = async (token: string) => {
     try {
-        const token = getAccessToken()
-        const response = await fetch(USER_URL, {
+        const url = BASE_URL + "user";
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -24,25 +21,40 @@ export const GetUser = async () => {
     }
 }
 
-export const getAccessToken = () => {
-    var data = Cookies.get('access_token');
-    return (data) ? data : "";
-}
-
-export const setAccessToken = (value:string) => {
-    Cookies.set('access_token', value, { expires: 100, path: '/' });
-}
-
-export const AuthUser = async (email: string, password: string) => {
+export const getUser = async (id: number) => {
     try {
-        const response = await fetch(AUTH_URL, {
+        const url = BASE_URL + "user/" + id;
+        const response = await fetch(url);
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const getAccessToken = () => {
+    var value = Cookies.get('access_token');
+    console.log("getAccessToken:", value)
+    return value;
+}
+
+export const setAccessToken = (value: string) => {
+    Cookies.set('access_token', value, { expires: 100 });
+}
+
+export const authUser = async (credentials: any) => {
+    try {
+        const url = BASE_URL + "auth";
+        var email: string = credentials.email
+        var password: string = credentials.password;
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', },
-            body: JSON.stringify({ email: email, password: password, }),
+            body: JSON.stringify({ email, password }),
         });
         if (response.ok) {
             const result = await response.json();
-            if (result.access_token) setAccessToken(result.access_token);
             return result;
         }
     } catch (error) {
@@ -54,9 +66,10 @@ export const signOut = () => {
     Cookies.remove('access_token');
 }
 
-export const RegistUser = async (postUser: PostUser) => {
+export const registUser = async (postUser: PostUser) => {
     try {
-        const response = await fetch(REGIST_URL, {
+        const url = BASE_URL + "regist/store";
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', },
             body: JSON.stringify(postUser),

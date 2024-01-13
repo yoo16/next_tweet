@@ -2,7 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { AuthUser } from '@/app/services/UserService';
+import { authUser, tokenUser } from '@/app/services/UserService';
 
 export const authOptions: NextAuthOptions = {
     debug: true,
@@ -16,52 +16,37 @@ export const authOptions: NextAuthOptions = {
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!
         }),
-        // CredentialsProvider({
-        //     name: "Sign in",
-        //     credentials: {
-        //         email: {
-        //             label: "Email",
-        //             type: "email",
-        //             placeholder: "Email",
-        //         },
-        //         password: { label: "Password", type: "password" },
-        //     },
-        //     async authorize(credentials) {
-        //         console.log("Credentials: ", credentials);
-        //         var email = credentials?.email;
-        //         var password = credentials?.password;
-        //         if (!email || !password) return;
-        //         const user = await AuthUser(email, password);
-        //         return user;
-        //     }
-        // }
-        // ),
+        CredentialsProvider({
+            id: 'user', name: 'User', credentials: {
+                email: { label: 'メールアドレス', type: 'email', placeholder: 'メールアドレス' },
+                password: { label: 'パスワード', type: 'password', placeholder: 'パスワード' }
+            },
+            async authorize(credentials) {
+                var authResult = await authUser(credentials)
+                var accessToken = authResult.access_token
+                console.log("access_token:", accessToken)
+                if (accessToken) {
+                    var user = await tokenUser(accessToken);
+                    console.log("user:", user)
+                    if (user) {
+                        user.accessToken = accessToken;
+                        return user
+                    }
+                }
+                return null
+            },
+        }),
     ],
     callbacks: {
-        jwt: async ({ token, account, user }) => {
-            console.log('jwt:', { user, token, account })
-
-            if (user) {
-                token.user = user;
-                const u = user as any
-                token.role = u.role;
-            }
-            if (account) {
-                token.accessToken = account.access_token
-            }
-            return token;
+        async jwt({ token, user }) {
+            // console.log("token:", token)
+            // console.log("User:", user)
+            return { ...token, ...user }
         },
-        // session: ({ session, token }) => {
-        //     console.log("in session", { session, token });
-        //     token.accessToken
-        //     return {
-        //         ...session,
-        //         user: {
-        //             ...session.user,
-        //             role: token.role,
-        //         },
-        //     };
-        // },
+        async session({ session, token }) {
+            session.user = token;
+            return session;
+        },
     }
 };
 

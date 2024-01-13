@@ -2,16 +2,17 @@
 
 import Link from 'next/link';
 import Image from 'next/image'
-import { User } from '@/app/models/User';
-import { useUserContext } from '@/app/context/UserContext';
 import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react"
+import { useState } from "react"
+import { User, initialUser } from "@/app/models/User"
+
 import imageMe from "@/public/images/me.png";
 
 const linkClass = "block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4";
 
 const Navbar = () => {
-  const user: User = useUserContext();
-  console.log("Navbar:", user);
+  const { data: session } = useSession();
 
   return (
     <div>
@@ -29,43 +30,29 @@ const Navbar = () => {
         </div>
         <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
           <div className="text-sm lg:flex-grow">
-            {user && (
+            {session?.user && (
               <>
                 <Link href="/user/profile" className={linkClass}>
                   Profile
                 </Link>
-                <Link href="/user/logout" className={linkClass}>
-                  Logout
-                </Link>
-                {/* <Link href="" onClick={signOut} className={linkClass}>
+                <button onClick={() => signOut()} className={linkClass}>
                   Sign out
-                </Link> */}
+                </button>
               </>
-            )
-            }
-            {!user &&
-              <>
-                <Link href="/regist" className={linkClass}>
-                  Register
-                </Link>
-                <Link href="/login" className={linkClass}>
-                  Login
-                </Link>
-              </>
-            }
+            )}
           </div>
-          {user &&
+          {session?.user &&
             <div className="flex justify-end text-sm font-bold">
               <div className="flex profile-image">
                 <Image src={imageMe} alt="" />
-                <span className='text-white p-2'>{user.name}</span>
+                <span className='text-white p-2'>{session.user.name}</span>
               </div>
             </div>
           }
         </div>
-      </nav >
+      </nav>
 
-    </div >
+    </div>
   )
 }
 

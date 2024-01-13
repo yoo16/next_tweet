@@ -3,7 +3,9 @@
 import { useEffect, useState, createContext, useContext, Suspense } from 'react';
 import TweetDetail from '@/app/components/tweet/TweetDetail';
 import { Tweet } from '@/app/models/Tweet';
-import { GetTweets, PostTweet } from '@/app/services/TweetService';
+import { User } from '@/app/models/User';
+import { getTweets } from '@/app/services/TweetService';
+import { useSession } from 'next-auth/react';
 
 interface TweetListProps {
     newTweet: Tweet;
@@ -11,17 +13,18 @@ interface TweetListProps {
 
 const TweetList = ({ newTweet }: TweetListProps) => {
     const [tweets, setTweets] = useState<Tweet[]>([]);
+    const { data: session } = useSession();
 
     useEffect(() => {
         (async () => {
-            const tweets = await GetTweets();
+            const tweets = await getTweets(session?.user as User);
             setTweets(tweets);
         })();
     }, []);
 
     useEffect(() => {
         (async () => {
-            if (newTweet.id > 0) {
+            if (newTweet && newTweet.id > 0) {
                 setTweets(tweets => [newTweet, ...tweets]);
             }
         })();

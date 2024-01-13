@@ -21,8 +21,6 @@ class TweetController extends Controller
     function add(TweetRequest $request)
     {
         $user = $request->user();
-        // Log::debug($request);
-        // Log::debug($user);
         if ($user && $request->user_id == $user->id) {
             $tweet = Tweet::create($request->all());
             $tweet->user = $user;

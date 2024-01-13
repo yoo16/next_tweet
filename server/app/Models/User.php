@@ -30,11 +30,18 @@ class User extends Authenticatable
 
     static function auth(Request $request): string
     {
+        $token = "";
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             $user = User::where('email', $request->email)->firstOrFail();
-            return $user->createToken('auth_token')->plainTextToken;
+            if ($user->remember_token) {
+                $token = $user->remember_token;
+            } else {
+                $token = $user->createToken('auth_token')->plainTextToken;
+                $user->remember_token = $token;
+                $user->save();
+            }
         }
-        return "";
+        return $token;
     }
 }

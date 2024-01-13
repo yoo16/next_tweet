@@ -1,17 +1,39 @@
 import { PostUser } from '@/app/models/User';
-import Cookies from 'js-cookie';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+const bearerHeader = (token: string) => {
+    return {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+    }
+}
 
 export const tokenUser = async (token: string) => {
     try {
         const url = BASE_URL + "user";
         const response = await fetch(url, {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
+            headers: bearerHeader(token),
+        });
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const createToken = async (token: any) => {
+    try {
+        const url = BASE_URL + "auth/token";
+        const name = token.name;
+        const email = token.email;
+        console.log(token.name, token.email)
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: bearerHeader(''),
+            body: JSON.stringify({ name, email }),
         });
         if (response.ok) {
             return await response.json();
@@ -33,16 +55,6 @@ export const getUser = async (id: number) => {
     }
 }
 
-export const getAccessToken = () => {
-    var value = Cookies.get('access_token');
-    console.log("getAccessToken:", value)
-    return value;
-}
-
-export const setAccessToken = (value: string) => {
-    Cookies.set('access_token', value, { expires: 100 });
-}
-
 export const authUser = async (credentials: any) => {
     try {
         const url = BASE_URL + "auth";
@@ -60,10 +72,6 @@ export const authUser = async (credentials: any) => {
     } catch (error) {
         console.error(error);
     }
-}
-
-export const signOut = () => {
-    Cookies.remove('access_token');
 }
 
 export const registUser = async (postUser: PostUser) => {

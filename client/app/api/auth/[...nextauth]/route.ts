@@ -2,36 +2,32 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { authUser, tokenUser } from '@/app/services/UserService';
+import { authUser, tokenUser, createToken } from '@/app/services/UserService';
 
 export const authOptions: NextAuthOptions = {
-    debug: true,
     session: { strategy: "jwt" },
     providers: [
-        GitHubProvider({
-            clientId: process.env.GITHUB_ID!,
-            clientSecret: process.env.GITHUB_SECRET!,
-        }),
-        GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!
-        }),
+        // GitHubProvider({
+        //     clientId: process.env.GITHUB_ID!,
+        //     clientSecret: process.env.GITHUB_SECRET!,
+        // }),
+        // GoogleProvider({
+        //     clientId: process.env.GOOGLE_CLIENT_ID!,
+        //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+        // }),
         CredentialsProvider({
-            id: 'user', name: 'User', credentials: {
-                email: { label: 'メールアドレス', type: 'email', placeholder: 'メールアドレス' },
-                password: { label: 'パスワード', type: 'password', placeholder: 'パスワード' }
+            credentials: {
+                email: { label: 'Email', type: 'email', placeholder: 'Email' },
+                password: { label: 'Password', type: 'password', placeholder: 'Password' }
             },
             async authorize(credentials) {
-                var authResult = await authUser(credentials)
-                var accessToken = authResult.access_token
+                const authResult = await authUser(credentials)
+                const accessToken = authResult.access_token
                 console.log("access_token:", accessToken)
                 if (accessToken) {
-                    var user = await tokenUser(accessToken);
-                    console.log("user:", user)
-                    if (user) {
-                        user.accessToken = accessToken;
-                        return user
-                    }
+                    const user = await tokenUser(accessToken);
+                    user.accessToken = accessToken;
+                    return user
                 }
                 return null
             },
@@ -39,12 +35,12 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async jwt({ token, user }) {
-            // console.log("token:", token)
-            // console.log("User:", user)
+            console.log("jwt:", token, user)
             return { ...token, ...user }
         },
         async session({ session, token }) {
-            session.user = token;
+            session.user = token as any;
+            console.log("session:", session, token)
             return session;
         },
     }

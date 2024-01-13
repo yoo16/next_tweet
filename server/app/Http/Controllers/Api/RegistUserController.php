@@ -9,13 +9,14 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Exception;
 
 class RegistUserController extends Controller
 {
+
     public function store(RegistUserRequest $request)
     {
-        Log::debug("RegistUser: store()");
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -23,13 +24,10 @@ class RegistUserController extends Controller
         ]);
         if ($user) {
             $user->remember_token = $user->createToken('auth_token')->plainTextToken;;
-            // $user->save();
-            return response()->json([
-                'access_token' => $user->remember_token,
-                'token_type' => 'Bearer',
-            ]);
+            $user->save();
+            return response()->json(['user' => $user]);
         } else {
-            return response()->json(['error' => ['message' => 'invalid auth']]);
+            return response()->json(['error' => ['message' => 'invalid regist']]);
         }
     }
 }

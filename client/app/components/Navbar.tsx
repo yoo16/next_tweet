@@ -4,8 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image'
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react"
-import { useState } from "react"
-import { User, initialUser } from "@/app/models/User"
 
 import imageMe from "@/public/images/me.png";
 

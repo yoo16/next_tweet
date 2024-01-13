@@ -20,7 +20,7 @@ function RegistPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState<Error>({ name: "", email: "", password: "" });
+    const [error, setError] = useState<Error>({ name, email, password });
     const router = useRouter();
 
     const regist = async () => {
@@ -28,7 +28,6 @@ function RegistPage() {
         if (result.error) {
             setError(result.error);
         } else {
-            localStorage.setItem('access_token', result.access_token);
             router.push('/');
         }
     }

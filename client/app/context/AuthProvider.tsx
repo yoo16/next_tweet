@@ -1,7 +1,7 @@
 'use client'
 
 import { SessionProvider } from "next-auth/react"
-import { createToken } from "@/app/services/UserService"
+import { useSession } from "next-auth/react"
 
 export default function AuthProvider({
     children,
@@ -10,8 +10,6 @@ export default function AuthProvider({
     children: React.ReactNode
     session: any
 }): React.ReactNode {
-    console.log('---AuthProvider---');
-
     return (
         <SessionProvider session={session}>
             {children}

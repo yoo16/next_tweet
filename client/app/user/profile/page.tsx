@@ -1,18 +1,10 @@
 "use client"
 
 import { User } from '@/app/models/User';
-import { getUser } from '@/app/services/UserService';
 import { useState, useEffect } from 'react'
 
 const ProfilePage = () => {
     const [user, setUser] = useState<User>();
-
-    useEffect(() => {
-        (async () => {
-            // var user: User = await GetUser();
-            // setUser(user);
-        })();
-    }, []);
 
     return (
         <div>

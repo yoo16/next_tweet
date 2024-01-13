@@ -5,7 +5,6 @@ import Navbar from './components/Navbar';
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { getServerSession } from "next-auth/next"
 import AuthProvider from "@/app/context/AuthProvider"
-import { createToken } from "@/app/services/UserService"
 
 export const metadata: Metadata = {
   title: 'Next Tweet',

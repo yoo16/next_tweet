@@ -1,8 +1,8 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { authUser, tokenUser, createToken } from '@/app/services/UserService';
+import { authUser, tokenUser } from '@/app/services/UserService';
 
 export const authOptions: NextAuthOptions = {
     session: { strategy: "jwt" },
@@ -16,6 +16,7 @@ export const authOptions: NextAuthOptions = {
         //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!
         // }),
         CredentialsProvider({
+            name: "Sign in",
             credentials: {
                 email: { label: 'Email', type: 'email', placeholder: 'Email' },
                 password: { label: 'Password', type: 'password', placeholder: 'Password' }

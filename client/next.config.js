@@ -2,6 +2,5 @@
 const nextConfig = {
     reactStrictMode: false,
 }
-module.exports = {
-    // "output": 'export',
-}
+
+module.exports = nextConfig

@@ -5,12 +5,15 @@ import GoogleProvider from "next-auth/providers/google";
 import { authUser, tokenUser } from '@/app/services/UserService';
 
 export const authOptions: NextAuthOptions = {
+    pages: {
+        signIn: '/auth/login',
+    },
     session: { strategy: "jwt" },
     providers: [
-        // GitHubProvider({
-        //     clientId: process.env.GITHUB_ID!,
-        //     clientSecret: process.env.GITHUB_SECRET!,
-        // }),
+        GitHubProvider({
+            clientId: process.env.GITHUB_ID!,
+            clientSecret: process.env.GITHUB_SECRET!,
+        }),
         // GoogleProvider({
         //     clientId: process.env.GOOGLE_CLIENT_ID!,
         //     clientSecret: process.env.GOOGLE_CLIENT_SECRET!
@@ -19,7 +22,7 @@ export const authOptions: NextAuthOptions = {
             name: "Sign in",
             credentials: {
                 email: { label: 'Email', type: 'email', placeholder: 'Email' },
-                password: { label: 'Password', type: 'password', placeholder: 'Password' }
+                password: { label: 'Password', type: 'password', placeholder: '******' }
             },
             async authorize(credentials) {
                 const authResult = await authUser(credentials)
@@ -35,8 +38,14 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
+        async redirect({ url, baseUrl }) {
+            console.log('---- redirect ---')
+            console.log(baseUrl)
+            return baseUrl
+        },
         async jwt({ token, user }) {
-            console.log("jwt:", token, user)
+            console.log('---- jwt ---')
+            console.log(token, user)
             return { ...token, ...user }
         },
         async session({ session, token }) {

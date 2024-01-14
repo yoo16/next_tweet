@@ -38,12 +38,14 @@ const LoginPage = () => {
 
             <div>
                 <button
-                    className='w-full bg-black hover:bg-gray-800 text-white py-2 px-4 my-3 rounded-lg'
+                    className="py-2 px-4 my-3 w-full bg-black hover:bg-gray-800
+                     text-white rounded-lg"
                     onClick={() => auth()}
                 >Sign in</button>
                 <Link
                     href='/auth/regist/'
-                    className='flex justify-center p-2 my-1 text-gray-600 bg-gray-200 hover:bg-gray-300  rounded-lg'
+                    className="p-2 my-1 flex justify-center text-gray-600
+                     bg-gray-200 hover:bg-gray-300  rounded-lg"
                 >Register</Link>
             </div>
         </div>

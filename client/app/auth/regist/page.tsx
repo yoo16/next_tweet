@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { registUser } from '@/app/services/UserService';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -54,7 +54,7 @@ function RegistPage() {
             <div>
                 <button
                     className='w-full bg-black hover:bg-gray-800 focus:shadow-outline focus:outline-none text-white py-2 px-4 my-3 rounded-lg'
-                    onClick={() => { regist(); }}
+                    onClick={() => { regist() }}
                 >Sign up</button>
 
                 <Link

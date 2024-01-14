@@ -1,56 +1,64 @@
 "use client"
 
 import Link from 'next/link';
+import NavbarLink from './NavbarLink';
+import Button from './Button';
 import Image from 'next/image'
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react"
 
+import { SiLoopback } from "react-icons/si";
 import imageMe from "@/public/images/me.png";
 
-const linkClass = "block mt-4 lg:inline-block lg:mt-0 text-white hover:text-white mr-4";
+const linkClass = "hidden p-3 md:inline-block text-white";
 
 const Navbar = () => {
   const { data: session } = useSession();
 
   return (
-    <div>
-      <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6">
-        <div className="flex items-center flex-shrink-0 text-white mr-6">
-          <svg className="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" /></svg>
-          <Link href="/" className="text-white">
-            <span className="font-semibold text-xl tracking-tight">Next Tweet</span>
-          </Link>
-        </div>
-        <div className="block lg:hidden">
-          <button className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
-            <svg className="fill-current h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><title>Menu</title><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" /></svg>
-          </button>
-        </div>
-        <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-          <div className="text-sm lg:flex-grow">
-            {session?.user && (
-              <>
-                <Link href="/user/profile" className={linkClass}>
-                  Profile
-                </Link>
-                <button onClick={() => signOut()} className={linkClass}>
-                  Sign out
-                </button>
-              </>
-            )}
-          </div>
-          {session?.user &&
-            <div className="flex justify-end text-sm font-bold">
-              <div className="flex profile-image">
-                <Image src={imageMe} alt="" />
-                <span className='text-white p-2'>{session.user.name}</span>
-              </div>
-            </div>
-          }
-        </div>
-      </nav>
+    <nav className="px-5 py-3 flex border-b">
+      <div className="flex items-center mr-6">
+        <SiLoopback className="me-3" size="2em" />
+        <Link href="/" className="text-black">
+          <span className="font-semibold text-xl">Next Tweet</span>
+        </Link>
+      </div>
 
-    </div>
+      <div className="text-sm md:flex-grow">
+        {
+          session?.user ? (
+            <>
+              <NavbarLink href="/user/profile" label="Profile" />
+              <NavbarLink href="/auth/regist" label="Register" />
+              <NavbarLink href="#" label="Sign out" onClick={() => {}} />
+              <NavbarLink href="/auth/login" label="Sign in" />
+            </>
+          ) : (
+            <>
+            </>
+          )
+        }
+      </div>
+      {session?.user &&
+        <div className="hidden md:block">
+          <div className="flex justify-end text-xs">
+            <div className="flex mt-1">
+              <Image src={imageMe} className="rounded-full h-8 w-8" alt="" />
+              <span className="p-2">{session.user.name}</span>
+            </div>
+          </div>
+        </div>
+      }
+      <div className="block md:hidden">
+        <button className="flex items-center px-1 py-2">
+          <div className="p-1 space-y-1">
+            <span className="block w-6 h-0.5 bg-white"></span>
+            <span className="block w-6 h-0.5 bg-white"></span>
+            <span className="block w-6 h-0.5 bg-white"></span>
+          </div>
+        </button>
+      </div>
+    </nav>
   )
 }
 

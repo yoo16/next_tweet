@@ -1,12 +1,13 @@
 "use client";
 
+import { FaUser } from "react-icons/fa";
 import { useState } from 'react';
-import { registUser } from '@/app/services/UserService';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import FormError from '@/app/components/FormError';
 import Input from '@/app/components/Input';
-import { FaUser } from "react-icons/fa";
+import { registUser } from '@/app/services/UserService';
+import { Suspense } from "react";
 
 export interface Error {
     name: string;

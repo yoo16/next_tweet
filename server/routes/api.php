@@ -21,3 +21,10 @@ Route::post('/regist/store', [RegistUserController::class, 'store']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Socialite
+Route::get('/login/{provider}', [AuthController::class, 'getOAuthURL'])
+    ->where('provider', 'github')->name('oauth.request');
+
+Route::post('/auth/{provider}/callback', [AuthController::class, 'callbackOAuthURL'])
+    ->where('provider', 'github')->name('oauth.callback');

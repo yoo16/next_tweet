@@ -5,6 +5,8 @@ import Navbar from './components/Navbar';
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { getServerSession } from "next-auth/next"
 import AuthProvider from "@/app/context/AuthProvider"
+import { Suspense } from 'react';
+import Loading from './components/Loading';
 
 export const metadata: Metadata = {
   title: 'Next Tweet',
@@ -21,12 +23,14 @@ export default async function RootLayout({
   return (
     <html lang="ja">
       <body>
-        <AuthProvider session={session}>
-          <Navbar />
-          <main className="flex min-h-screen flex-col p-5">
-            {children}
-          </main>
-        </AuthProvider>
+        <Suspense fallback={<Loading />}>
+          <AuthProvider session={session}>
+            <Navbar />
+            <main className="flex min-h-screen flex-col p-5">
+              {children}
+            </main>
+          </AuthProvider>
+        </Suspense>
       </body>
     </html>
   )

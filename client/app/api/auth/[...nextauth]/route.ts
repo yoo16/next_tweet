@@ -1,12 +1,14 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { authUser, tokenUser } from '@/app/services/UserService';
+import { Session } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
+    debug: false,
     pages: {
-        signIn: '/auth/login',
+        // signIn: '/auth/login',
     },
     session: { strategy: "jwt" },
     providers: [
@@ -25,6 +27,7 @@ export const authOptions: NextAuthOptions = {
                 password: { label: 'Password', type: 'password', placeholder: '******' }
             },
             async authorize(credentials) {
+                console.log('--- authorize() ---')
                 const authResult = await authUser(credentials)
                 const accessToken = authResult.access_token
                 console.log("access_token:", accessToken)
@@ -33,24 +36,29 @@ export const authOptions: NextAuthOptions = {
                     user.accessToken = accessToken;
                     return user
                 }
-                return null
+                return false
             },
         }),
     ],
     callbacks: {
+        async signIn({ user, account, profile, email, credentials }) {
+            console.log('--- signIn ---')
+            // console.log(user, account, profile, email, credentials)
+            return true;
+        },
         async redirect({ url, baseUrl }) {
             console.log('---- redirect ---')
-            console.log(baseUrl)
             return baseUrl
         },
         async jwt({ token, user }) {
             console.log('---- jwt ---')
-            console.log(token, user)
+            // console.log(token, user)
             return { ...token, ...user }
         },
         async session({ session, token }) {
-            session.user = token as any;
-            console.log("session:", session, token)
+            console.log('---- session ---')
+            session.user = token as Session["user"];
+            console.log(session)
             return session;
         },
     }

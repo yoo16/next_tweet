@@ -29,12 +29,12 @@ const Navbar = () => {
           session?.user ? (
             <>
               <NavbarLink href="/user/profile" label="Profile" />
-              <NavbarLink href="/auth/regist" label="Register" />
-              <NavbarLink href="#" label="Sign out" onClick={() => {}} />
-              <NavbarLink href="/auth/login" label="Sign in" />
+              <NavbarLink href="#" label="Sign out" onClick={signOut} />
             </>
           ) : (
             <>
+              <NavbarLink href="/auth/regist" label="Register" />
+              <NavbarLink href="/auth/login" label="Sign in" />
             </>
           )
         }

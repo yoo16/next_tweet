@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import FormError from '@/app/components/FormError';
 import Input from '@/app/components/Input';
 import { RiLockPasswordFill } from "react-icons/ri";
 import { signIn } from 'next-auth/react';
-
+import { useSession } from 'next-auth/react';
 export interface Error {
     auth: string;
 }
@@ -17,10 +17,16 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState<Error>({ auth: "" });
     const router = useRouter();
+    const { data: session } = useSession();
 
     const auth = async () => {
-        await signIn("credentials", { email, password, });
-        setError({ auth: "Invalid Email or Password" });
+        try {
+            const result = await signIn("credentials", { email, password, });
+            console.log(result)
+            console.log('auth/login: auth()')
+        } catch (error) {
+            setError({ auth: "Invalid Email or Password" });
+        }
     }
 
     return (
@@ -39,13 +45,13 @@ const LoginPage = () => {
             <div>
                 <button
                     className="py-2 px-4 my-3 w-full bg-black hover:bg-gray-800
-                     text-white rounded-lg"
-                    onClick={() => auth()}
+                    text-white rounded-lg"
+                    onClick={auth}
                 >Sign in</button>
                 <Link
                     href='/auth/regist/'
                     className="p-2 my-1 flex justify-center text-gray-600
-                     bg-gray-200 hover:bg-gray-300  rounded-lg"
+                    bg-gray-200 hover:bg-gray-300  rounded-lg"
                 >Register</Link>
             </div>
         </div>

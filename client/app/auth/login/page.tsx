@@ -8,7 +8,7 @@ import FormError from '@/app/components/FormError';
 
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getUser, signIn, updateToken } from '@/app/services/UserService';
+import { getUser, signIn, updateAccessToken } from '@/app/services/UserService';
 import { Button } from '@/components/ui/button';
 import UserContext from '@/app/context/UserContext';
 // import { useSession } from 'next-auth/react';
@@ -27,14 +27,16 @@ const LoginPage = () => {
 
     const auth = async () => {
         const result = await signIn({ email, password, });
-        const token = result?.access_token;
+        const token = result.access_token;
         if (!result || result.error) {
             setError(result?.error || { auth: "internal error" });
-        } else if (token) {
-            const user = await getUser(token)
-            setUser(user);
-            const response = await updateToken(token);
-            if (response) router.push('/');
+        } else {
+            if (token) {
+                await updateAccessToken(token);
+                const user = await getUser(token)
+                setUser(user);
+                router.push('/');
+            }
         }
         // try {
         //     const result = await signIn("credentials", { email, password, });
@@ -54,7 +56,7 @@ const LoginPage = () => {
 
             <div>
                 <Input
-                    type="text"
+                    type="email"
                     value={email}
                     placeholder='Email'
                     onChange={setEmail}

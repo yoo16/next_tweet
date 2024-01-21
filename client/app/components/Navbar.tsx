@@ -23,6 +23,7 @@ const Navbar = () => {
     setUser(initialUser);
     router.push('/api/auth/logout');
     e.preventDefault();
+    return;
   }
 
   return (

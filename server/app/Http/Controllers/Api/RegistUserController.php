@@ -23,8 +23,7 @@ class RegistUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
         if ($user) {
-            $user->remember_token = $user->createToken('auth_token')->plainTextToken;;
-            $user->save();
+            $user->accessToken = $user->createToken('auth_token')->plainTextToken;;
             return response()->json(['user' => $user]);
         } else {
             return response()->json(['error' => ['message' => 'invalid regist']]);

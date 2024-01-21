@@ -1,14 +1,15 @@
 "use client";
 
 import { FaUser } from "react-icons/fa";
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Input from '@/app/components/Input';
-import { registUser } from '@/app/services/UserService';
 import FormError from '@/app/components/FormError';
+import { registUser, updateAccessToken } from '@/app/services/UserService';
+import { useRouter } from 'next/navigation';
+import { useContext, useState } from 'react';
+import UserContext from "@/app/context/UserContext";
 
-export interface Error {
+interface RegistError {
     name: string;
     email: string;
     password: string;
@@ -18,15 +19,23 @@ function RegistPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState<Error>({ name, email, password });
+    const [error, setError] = useState<RegistError>({ name, email, password });
     const router = useRouter();
+    const { setUser } = useContext(UserContext);
 
     const regist = async () => {
         const result = await registUser({ name, email, password });
         if (result.error) {
             setError(result.error);
         } else {
-            router.push('/');
+            const user = result?.user;
+            const response = await updateAccessToken(user?.accessToken);
+            // console.log("regist:", user)
+            // console.log("regist:", response)
+            if (response) {
+                setUser(user);
+                router.push('/');
+            }
         }
     }
 
@@ -41,22 +50,29 @@ function RegistPage() {
                 <Input type="text" value={name} placeholder="Your Name" onChange={setName} />
                 <FormError message={error.name} />
 
-                <Input type="text" value={email} placeholder="Email" onChange={setEmail} />
+                <Input type="email" value={email} placeholder="Email" onChange={setEmail} />
                 <FormError message={error.email} />
 
-                <Input type="password" value={password} placeholder="******" onChange={setPassword} />
+                <Input type="password" value={password} placeholder="Password" onChange={setPassword} />
                 <FormError message={error.password} />
             </div>
 
             <div>
                 <button
-                    className='w-full bg-black hover:bg-gray-800 focus:shadow-outline focus:outline-none text-white py-2 px-4 my-3 rounded-lg'
-                    onClick={() => { regist() }}
+                    className="py-2 px-4 my-3 w-full 
+                    bg-black hover:bg-gray-800 
+                    focus:shadow-outline focus:outline-none 
+                    text-white 
+                    rounded-lg"
+                    onClick={regist}
                 >Sign up</button>
 
                 <Link
-                    href='/auth/login/'
-                    className='flex justify-center p-2 my-1 text-gray-600 bg-gray-200 hover:bg-gray-300  rounded-lg'
+                    href="/auth/login/"
+                    className="flex justify-center 
+                    p-2 my-1 
+                    text-gray-600 bg-gray-200 hover:bg-gray-300 
+                    rounded-lg"
                 >Sign in</Link>
             </div>
         </div>

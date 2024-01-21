@@ -23,7 +23,7 @@ const TweetDetail = ({ tweet }: TweetDetailProps) => {
                     <span className="font-bold">{tweet.user.name}</span>
                     <span className="ps-3 text-gray-500">{dateFormat(tweet.created_at)}</span>
                 </div>
-                <div className="tweet-text mt-2 mb-2">
+                <div className="whitespace-pre-wrap mt-2 mb-2">
                     {tweet.message}
                 </div>
             </div>

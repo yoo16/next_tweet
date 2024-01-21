@@ -25,7 +25,7 @@ const TweetForm = ({ onPostTweet }: TweetFormProps) => {
         <div>
             <textarea value={message} onChange={messageHandler} className="resize-none w-full h-24 border rounded-md p-2" placeholder="今なにしてる？"></textarea>
             <button
-                onClick={(e) => { onPost(); }}
+                onClick={onPost}
                 className={isButtonDisabled ? disableButtonClassName : enableButtonClassName }
                 disabled={isButtonDisabled}>
                 Send</button>

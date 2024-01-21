@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const { user } = useContext(UserContext);
-  const [tweet, setTweet] = useState<Tweet>(initialTweet);
+  const [newTweet, setNewTweet] = useState<Tweet>(initialTweet);
   const router = useRouter();
 
   console.log("Home:", user)
@@ -29,7 +29,7 @@ export default function Home() {
   const onPostTweet = async (message: string) => {
     if (user) {
       const data = await postTweet(user, message);
-      setTweet(data);
+      setNewTweet(data);
     }
   }
 
@@ -39,7 +39,7 @@ export default function Home() {
         (user && user?.id > 0) &&
         <>
           <TweetForm onPostTweet={onPostTweet} />
-          <TweetList newTweet={tweet} />
+          <TweetList newTweet={newTweet} />
         </>
       }
     </div>

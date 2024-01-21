@@ -1,19 +1,13 @@
 // export { default } from "next-auth/middleware";
 import { NextRequest, NextResponse } from 'next/server';
-import { getUser } from './app/services/UserService';
-import { useContext } from 'react';
-import UserContext from './app/context/UserContext';
 
 export async function middleware(req: NextRequest) {
-    console.log('--- middleware ---');
     const url = process.env.BASE_URL + "auth/login";
-    const token = req.cookies.get('access_token');
-    console.log('middleware:', token);
+    const token = await req.cookies.get('access_token');
     if (!token) {
         return NextResponse.redirect(url);
     } else {
-        const res = NextResponse.next();
-        return res;
+        return NextResponse.next();
     }
 }
 

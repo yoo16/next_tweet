@@ -8,24 +8,16 @@ import UserContext from '@/app/context/UserContext';
 // import { useSession } from 'next-auth/react';
 
 interface TweetListProps {
+    initialTweets: Tweet[];
     newTweet: Tweet;
 }
 
-const TweetList = ({ newTweet }: TweetListProps) => {
-    const { user } = useContext(UserContext);
-    const [tweets, setTweets] = useState<Tweet[]>([]);
-    // const { data: session } = useSession();
+const TweetList = ({ initialTweets, newTweet }: TweetListProps) => {
+    const [tweets, setTweets] = useState<Tweet[]>(initialTweets);
 
     useEffect(() => {
-        const fetchTweets = async () => {
-            if (user?.accessToken) {
-                const tweets = await getTweets(user.accessToken);
-                // const tweets = await getTweets(session?.user.accessToken as User);
-                setTweets(tweets);
-            }
-        };
-        fetchTweets();
-    }, [user]);
+        setTweets(initialTweets);
+    }, [initialTweets]);
 
     useEffect(() => {
         setTweets(currentTweets => [newTweet, ...currentTweets]);

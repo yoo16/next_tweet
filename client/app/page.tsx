@@ -6,7 +6,7 @@ import { Tweet, initialTweet } from '@/app/models/Tweet';
 import TweetList from '@/app/components/tweet/TweetList';
 import TweetForm from '@/app/components/tweet/TweetForm';
 
-import { postTweet } from '@/app/services/TweetService';
+import { getTweets, postTweet } from '@/app/services/TweetService';
 import UserContext from './context/UserContext';
 import { getUser, getAccessToken } from '@/app/services/UserService';
 import { useRouter } from 'next/navigation';
@@ -14,10 +14,11 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const { user } = useContext(UserContext);
+  const [tweets, setTweets] = useState<Tweet[]>([]);
   const [newTweet, setNewTweet] = useState<Tweet>(initialTweet);
   const router = useRouter();
-
   console.log("Home:", user)
+
   useEffect(() => {
     (async () => {
       if (!user.accessToken) {
@@ -25,6 +26,16 @@ export default function Home() {
       }
     })();
   }, [router, user]);
+
+  useEffect(() => {
+    (async () => {
+      if (user?.accessToken) {
+        const tweets = await getTweets(user.accessToken);
+        setTweets(tweets);
+      }
+    })();
+  }, [user]);
+
 
   const onPostTweet = async (message: string) => {
     if (user && user.accessToken == getAccessToken()) {
@@ -39,7 +50,7 @@ export default function Home() {
         (user && user?.id > 0 &&
           <>
             <TweetForm onPostTweet={onPostTweet} />
-            <TweetList newTweet={newTweet} />
+            <TweetList initialTweets={tweets} newTweet={newTweet} />
           </>
         )
       }

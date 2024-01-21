@@ -3,6 +3,7 @@
 import type { Tweet } from '@/app/models/Tweet';
 import Image from "next/image";
 import imageMe from "@/public/images/me.png";
+import Link from 'next/link';
 
 interface TweetDetailProps {
     tweet: Tweet;
@@ -20,7 +21,9 @@ const TweetDetail = ({ tweet }: TweetDetailProps) => {
             </div>
             <div className="tweet-body">
                 <div className="tweet-user">
-                    <span className="font-bold">{tweet.user.name}</span>
+                    <Link href={`/user/${tweet.user.id}`}>
+                        <span className="font-bold">{tweet.user.name}</span>
+                    </Link>
                     <span className="ps-3 text-gray-500">{dateFormat(tweet.created_at)}</span>
                 </div>
                 <div className="whitespace-pre-wrap mt-2 mb-2">

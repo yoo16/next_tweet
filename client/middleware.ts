@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest) {
+    console.log('--- middleware ---')
     const url = process.env.BASE_URL + "auth/login";
     const token = req.cookies.get('access_token');
     if (!token) {
@@ -12,6 +13,7 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    // matcher: ["/((?!auth|api).*)"],
-    matcher: ["/", "/user/:path*"]
+    // matcher: ["/((?!auth|api|images|.js|.css).*)"],
+    // matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+    matcher: ["/", "/user/:path*", "/user/:slug*"]
 };

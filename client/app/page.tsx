@@ -16,12 +16,15 @@ export default function Home() {
   const { user } = useContext(UserContext);
   const [tweet, setTweet] = useState<Tweet>(initialTweet);
   const router = useRouter();
-  const token = getAccessToken();
 
-  if (!token) {
-    router.replace('/auth/login');
-    return;
-  }
+  console.log("Home:", user)
+  useEffect(() => {
+    (async () => {
+      if (!user.accessToken) {
+        router.replace('/auth/login');
+      }
+    })();
+  }, [router, user]);
 
   const onPostTweet = async (message: string) => {
     if (user) {
@@ -32,8 +35,13 @@ export default function Home() {
 
   return (
     <div>
-      <TweetForm onPostTweet={onPostTweet} />
-      <TweetList newTweet={tweet} />
+      {
+        (user && user?.id > 0) &&
+        <>
+          <TweetForm onPostTweet={onPostTweet} />
+          <TweetList newTweet={tweet} />
+        </>
+      }
     </div>
   )
 }

@@ -22,7 +22,7 @@ const TweetList = ({ newTweet }: TweetListProps) => {
         const fetchTweets = async () => {
             setIsLoading(true);
             try {
-                if (user) {
+                if (user?.accessToken) {
                     const tweets = await getTweets(user.accessToken);
                     // const tweets = await getTweets(session?.user.accessToken as User);
                     setTweets(tweets);

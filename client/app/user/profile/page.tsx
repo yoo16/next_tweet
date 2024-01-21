@@ -12,8 +12,7 @@ const ProfilePage = () => {
     // const { data: session } = useSession();
     // const [user, setUser] = useState<User>(session?.user as User);
     const { user } = useContext(UserContext);
-    console.log(user)
-
+    console.log("ProfilePage:", user)
     return (
         <div className="mx-auto w-1/2">
             <h1 className="text-3xl text-center font-bold">Profile</h1>
@@ -21,7 +20,7 @@ const ProfilePage = () => {
                 <Image className="rounded-full h-[100px] w-[100px]" src={imageMe} alt="" />
             </div>
             <div className="flex justify-center p-3">
-                {user.name}
+                {user?.name}
             </div>
         </div>
     )

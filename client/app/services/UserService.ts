@@ -46,16 +46,22 @@ export const signIn = async (credentials: any) => {
     }
 }
 
-export const updateToken = async (token:string) => {
-    const url = NEXT_API_URL + "auth/login";
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-        },
-    });
-    return response;
+export const updateToken = async (token: string) => {
+    if (token) {
+        Cookies.set("access_token", token, { expires: 30 })
+        return true;
+    } else {
+        return false;
+    }
+    // const url = NEXT_API_URL + "auth/login";
+    // const response = await fetch(url, {
+    //     method: 'POST',
+    //     headers: {
+    //         'Authorization': `Bearer ${token}`,
+    //         'Content-Type': 'application/json',
+    //     },
+    // });
+    // return response;
 }
 
 export const registUser = async (postUser: PostUser) => {

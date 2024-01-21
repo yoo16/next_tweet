@@ -6,6 +6,7 @@ import AuthProvider from "@/app/providers/AuthProvider"
 import { cookies } from "next/headers";
 import { getUser } from './services/UserService';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 // import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 // import { getServerSession } from "next-auth/next"
@@ -24,7 +25,6 @@ export default async function RootLayout({
 }) {
   // const session = await getServerSession(authOptions)
   var cookie = cookies().get('access_token');
-  console.log(cookie?.value)
   var user;
   if (cookie) user = await getUser(cookie.value);
   // session?.user.accessToken = access_token;
@@ -32,7 +32,7 @@ export default async function RootLayout({
   return (
     <html lang="ja">
       <body>
-        <AuthProvider>
+        <AuthProvider currentUser={user}>
           <Navbar />
           <main className="flex min-h-screen flex-col p-5">
             {children}

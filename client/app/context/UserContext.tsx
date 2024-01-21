@@ -3,7 +3,7 @@
 import React from "react";
 import { User, initialUser } from "../models/User";
 
-interface UserContextType {
+export interface UserContextType {
     user: User;
     setUser: (newUser: User) => void;
 }

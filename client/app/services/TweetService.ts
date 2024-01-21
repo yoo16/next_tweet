@@ -1,11 +1,10 @@
-const URL_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+const LARAVEL_API_URL = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
 
 import { User } from '@/app/models/User'
 
-
 export const postTweet = async (user: User, message: string) => {
     if (!user || !message) return;
-    const url = URL_BASE + "tweet/add";
+    const url = LARAVEL_API_URL + "tweet/add";
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -21,7 +20,7 @@ export const postTweet = async (user: User, message: string) => {
 
 export const getTweets = async (accessToken:string) => {
     console.log(accessToken)
-    const url = URL_BASE + "tweet/get";
+    const url = LARAVEL_API_URL + "tweet/get";
     const response = await fetch(url, {
         method: 'GET',
         headers: {

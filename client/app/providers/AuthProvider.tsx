@@ -1,22 +1,29 @@
 'use client'
 
-import { SessionProvider } from "next-auth/react"
-import React from "react";
-import AuthContext from "../context/UserContext";
+import React, { useState } from "react";
+import UserContext from "../context/UserContext";
+import { User, initialUser } from "../models/User";
+// import { SessionProvider } from "next-auth/react"
 
 export default function AuthProvider({
     children,
-    user,
+    // user,
     // session,
 }: {
     children: React.ReactNode
-    user: any
+    // user: any
     // session: any
 }): React.ReactNode {
+    // console.log('UserContext:', user)
+    const [user, setUser] = useState();
+    const value = {
+        user,
+        setUser,
+    }
     return (
-        <AuthContext.Provider value={user}>
+        <UserContext.Provider value={value}>
             {children}
-        </AuthContext.Provider>
+        </UserContext.Provider>
         // <SessionProvider session={session}>
         //     {children}
         // </SessionProvider>

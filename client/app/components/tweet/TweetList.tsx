@@ -4,9 +4,8 @@ import { useEffect, useState, createContext, useContext, Suspense } from 'react'
 import TweetDetail from '@/app/components/tweet/TweetDetail';
 import { Tweet } from '@/app/models/Tweet';
 import { getTweets } from '@/app/services/TweetService';
-
-import { getAccessToken } from '@/app/services/UserService';
 import { FaSpinner } from 'react-icons/fa';
+import UserContext from '@/app/context/UserContext';
 // import { useSession } from 'next-auth/react';
 
 interface TweetListProps {
@@ -14,20 +13,16 @@ interface TweetListProps {
 }
 
 const TweetList = ({ newTweet }: TweetListProps) => {
+    const { user } = useContext(UserContext);
     const [tweets, setTweets] = useState<Tweet[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     // const { data: session } = useSession();
 
     useEffect(() => {
-
-    }, []);
-
-    async function fetchTweets() {
-        const accessToken = getAccessToken();
-        if (accessToken) {
+        const fetchTweets = async () => {
             setIsLoading(true);
             try {
-                const tweets = await getTweets(accessToken);
+                const tweets = await getTweets(user.accessToken);
                 // const tweets = await getTweets(session?.user.accessToken as User);
                 setTweets(tweets);
             } catch (error) {
@@ -35,11 +30,12 @@ const TweetList = ({ newTweet }: TweetListProps) => {
             } finally {
                 setIsLoading(false);
             }
-        }
-    };
+        };
+        fetchTweets();
+    }, [user.accessToken]);
 
     useEffect(() => {
-        fetchTweets();
+        setTweets(currentTweets => [newTweet, ...currentTweets]);
     }, [newTweet]);
 
     if (isLoading) return (
@@ -51,7 +47,7 @@ const TweetList = ({ newTweet }: TweetListProps) => {
     return (
         <div>
             {
-                tweets.map((tweet) => (
+                tweets?.map((tweet) => (
                     <TweetDetail key={tweet.id} tweet={tweet} />
                 ))
             }

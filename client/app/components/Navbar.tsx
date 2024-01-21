@@ -3,18 +3,26 @@
 import Link from 'next/link';
 import NavbarLink from './NavbarLink';
 import Image from 'next/image'
-import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react"
 
 import { SiLoopback } from "react-icons/si";
 import imageMe from "@/public/images/me.png";
-import { useEffect, useState } from 'react';
-import { User, initialUser } from '../models/User';
+import { useRouter } from 'next/navigation';
+import { useContext } from 'react';
+import UserContext from '../context/UserContext';
+import { initialUser } from '../models/User';
+
+// import { signOut } from "next-auth/react";
+// import { useSession } from "next-auth/react"
 
 const Navbar = () => {
+  const router = useRouter();
+  var { user } = useContext(UserContext);
   // const { data: session } = useSession();
-  const [user, setUser] = useState<User>(initialUser);
-  const linkClass = "hidden p-3 md:inline-block text-white";
+
+  const signOut = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    router.push('/api/auth/logout');
+    e.preventDefault();
+  }
 
   return (
     <nav className="px-5 py-3 flex border-b">
@@ -27,7 +35,7 @@ const Navbar = () => {
 
       <div className="text-sm md:flex-grow">
         {
-          user.id ? (
+          user?.id ? (
             <>
               <NavbarLink href="/user/profile" label="Profile" />
               <NavbarLink href="#" label="Sign out" onClick={signOut} />
@@ -40,7 +48,7 @@ const Navbar = () => {
           )
         }
       </div>
-      {user.id &&
+      {user?.id &&
         <div className="hidden md:block">
           <div className="flex justify-end text-xs">
             <div className="flex mt-1">

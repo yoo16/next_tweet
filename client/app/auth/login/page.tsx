@@ -6,13 +6,13 @@ import { RiLockPasswordFill } from "react-icons/ri";
 
 import FormError from '@/app/components/FormError';
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-// import { signIn } from 'next-auth/react';
-import { signIn, getUser } from '@/app/services/UserService';
-import { cookies } from "next/headers";
+import { getUser, signIn, updateToken } from '@/app/services/UserService';
 import { Button } from '@/components/ui/button';
+import UserContext from '@/app/context/UserContext';
+// import { useSession } from 'next-auth/react';
+// import { signIn } from 'next-auth/react';
 export interface Error {
     auth: string;
 }
@@ -22,16 +22,19 @@ const LoginPage = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState<Error>({ auth: "" });
     const router = useRouter();
-    const { data: session } = useSession();
+    const { setUser } = useContext(UserContext);
+    // const { data: session } = useSession();
 
     const auth = async () => {
         const result = await signIn({ email, password, });
-        console.log(result)
-        if (result.access_token) {
-            document.cookie = `access_token=${result.access_token}; path=/`;
-            const user = await getUser(result.access_token);
-            console.log(user)
-            router.push('/');
+        const token = result?.access_token;
+        if (!result || result.error) {
+            setError(result?.error || { auth: "internal error" });
+        } else if (token) {
+            const user = await getUser(token)
+            setUser(user);
+            const response = await updateToken(token);
+            if (response) router.push('/');
         }
         // try {
         //     const result = await signIn("credentials", { email, password, });
@@ -66,16 +69,12 @@ const LoginPage = () => {
             </div>
 
             <div>
-                <Button onClick={auth}>auth</Button>
-                <button
-                    className="py-2 px-4 my-3 w-full bg-black hover:bg-gray-800
-                    text-white rounded-lg"
-                    onClick={auth}
-                >Sign in</button>
+                <Button onClick={auth} className="w-full">Sign in</Button>
                 <Link
                     href='/auth/regist/'
-                    className="p-2 my-1 flex justify-center text-gray-600
-                    bg-gray-200 hover:bg-gray-300  rounded-lg"
+                    className="p-2 my-1 flex justify-center 
+                    text-gray-600
+                    bg-gray-200 hover:bg-gray-300 rounded-lg"
                 >Register</Link>
             </div>
         </div>

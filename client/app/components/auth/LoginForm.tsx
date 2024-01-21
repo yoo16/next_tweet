@@ -1,4 +1,4 @@
-import { authUser } from "@/app/services/UserService";
+import { signIn } from "@/app/services/UserService";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -13,7 +13,7 @@ const LoginForm = () => {
     const router = useRouter();
 
     const auth = async () => {
-        const result = await authUser({ email, password });
+        const result = await signIn({ email, password });
         if (result.error) {
             setError(result.error);
         } else {

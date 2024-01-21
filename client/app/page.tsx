@@ -18,7 +18,6 @@ export default function Home() {
   const router = useRouter();
   const token = getAccessToken();
 
-  console.log('Home:', user)
   if (!token) {
     router.replace('/auth/login');
     return;

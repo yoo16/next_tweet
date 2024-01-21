@@ -1,6 +1,6 @@
 "use client"
 
-import { SetStateAction, useState } from 'react';
+import { useState } from 'react';
 
 interface TweetFormProps {
     onPostTweet: (message: string) => void;

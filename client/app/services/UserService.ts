@@ -1,8 +1,13 @@
 import { PostUser } from '@/app/models/User';
+import Cookies from 'js-cookie';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const tokenUser = async (token: string) => {
+export const getAccessToken = () => {
+    return Cookies.get('access_token');
+}
+
+export const getUser = async (token: string) => {
     const url = BASE_URL + "user";
     const response = await fetch(url, {
         method: 'GET',
@@ -12,11 +17,13 @@ export const tokenUser = async (token: string) => {
         },
     });
     if (response.ok) {
-        return await response.json();
+        const data = await response.json();
+        data.accessToken = token;
+        return data;
     }
 }
 
-export const getUser = async (id: number) => {
+export const getUserById = async (id: number) => {
     const url = BASE_URL + "user/" + id;
     const response = await fetch(url);
     if (response.ok) {
@@ -24,7 +31,7 @@ export const getUser = async (id: number) => {
     }
 }
 
-export const authUser = async (credentials: any) => {
+export const signIn = async (credentials: any) => {
     const url = BASE_URL + "auth";
     const email: string = credentials.email
     const password: string = credentials.password;

@@ -4,18 +4,11 @@ import { FaUser } from "react-icons/fa";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import FormError from '@/app/components/FormError';
 import Input from '@/app/components/Input';
 import { registUser } from '@/app/services/UserService';
-import { Suspense } from "react";
+import FormError from '@/app/components/FormError';
 
 export interface Error {
-    name: string;
-    email: string;
-    password: string;
-}
-
-export interface PostUser {
     name: string;
     email: string;
     password: string;
@@ -29,7 +22,7 @@ function RegistPage() {
     const router = useRouter();
 
     const regist = async () => {
-        var result = await registUser({ name, email, password });
+        const result = await registUser({ name, email, password });
         if (result.error) {
             setError(result.error);
         } else {
@@ -39,18 +32,21 @@ function RegistPage() {
 
     return (
         <div className="mx-auto w-1/3">
-            <h2 className="flex p-3 me-3 text-2xl justify-center">
+            <h1 className="flex p-3 me-3 text-2xl justify-center">
                 <FaUser className='mt-1 me-3' />
-                Sign up
-            </h2>
-            <Input type="text" value={name} placeholder="Your Name" event={setName} />
-            <FormError message={error.name} />
+                Register
+            </h1>
 
-            <Input type="text" value={email} placeholder="Email" event={setEmail} />
-            <FormError message={error.email} />
+            <div>
+                <Input type="text" value={name} placeholder="Your Name" onChange={setName} />
+                <FormError message={error.name} />
 
-            <Input type="password" value={password} placeholder="******" event={setPassword} />
-            <FormError message={error.password} />
+                <Input type="text" value={email} placeholder="Email" onChange={setEmail} />
+                <FormError message={error.email} />
+
+                <Input type="password" value={password} placeholder="******" onChange={setPassword} />
+                <FormError message={error.password} />
+            </div>
 
             <div>
                 <button

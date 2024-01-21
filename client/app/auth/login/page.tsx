@@ -1,13 +1,18 @@
 "use client"
 
-import { Suspense, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import FormError from '@/app/components/FormError';
 import Input from '@/app/components/Input';
 import { RiLockPasswordFill } from "react-icons/ri";
-import { signIn } from 'next-auth/react';
+
+import FormError from '@/app/components/FormError';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+// import { signIn } from 'next-auth/react';
+import { signIn, getUser } from '@/app/services/UserService';
+import { cookies } from "next/headers";
+import { Button } from '@/components/ui/button';
 export interface Error {
     auth: string;
 }
@@ -20,13 +25,21 @@ const LoginPage = () => {
     const { data: session } = useSession();
 
     const auth = async () => {
-        try {
-            const result = await signIn("credentials", { email, password, });
-            console.log(result)
-            console.log('auth/login: auth()')
-        } catch (error) {
-            setError({ auth: "Invalid Email or Password" });
+        const result = await signIn({ email, password, });
+        console.log(result)
+        if (result.access_token) {
+            document.cookie = `access_token=${result.access_token}; path=/`;
+            const user = await getUser(result.access_token);
+            console.log(user)
+            router.push('/');
         }
+        // try {
+        //     const result = await signIn("credentials", { email, password, });
+        //     console.log(result)
+        //     console.log('auth/login: auth()')
+        // } catch (error) {
+        //     setError({ auth: "Invalid Email or Password" });
+        // }
     }
 
     return (
@@ -37,12 +50,23 @@ const LoginPage = () => {
             </h2>
 
             <div>
-                <Input type="text" value={email} placeholder='Email' event={setEmail} />
-                <Input type="password" value={password} placeholder='******' event={setPassword} />
+                <Input
+                    type="text"
+                    value={email}
+                    placeholder='Email'
+                    onChange={setEmail}
+                />
+                <Input
+                    type="password"
+                    value={password}
+                    placeholder='Password'
+                    onChange={setPassword}
+                />
                 <FormError message={error.auth} />
             </div>
 
             <div>
+                <Button onClick={auth}>auth</Button>
                 <button
                     className="py-2 px-4 my-3 w-full bg-black hover:bg-gray-800
                     text-white rounded-lg"

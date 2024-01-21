@@ -2,13 +2,13 @@ import NextAuth, { NextAuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { authUser, tokenUser } from '@/app/services/UserService';
+import { signIn, getUser } from '@/app/services/UserService';
 import { Session } from "next-auth";
 
 export const authOptions: NextAuthOptions = {
     debug: false,
     pages: {
-        // signIn: '/auth/login',
+        signIn: '/auth/login',
     },
     session: { strategy: "jwt" },
     providers: [
@@ -28,11 +28,11 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 console.log('--- authorize() ---')
-                const authResult = await authUser(credentials)
+                const authResult = await signIn(credentials)
                 const accessToken = authResult.access_token
                 console.log("access_token:", accessToken)
                 if (accessToken) {
-                    const user = await tokenUser(accessToken);
+                    const user = await getUser(accessToken);
                     user.accessToken = accessToken;
                     return user
                 }

@@ -1,19 +1,29 @@
+"use client"
 interface InputProps {
     type: string,
-    value: string,
-    placeholder: string,
-    event: any,
+    value?: string,
+    onChange?: (value: any) => void,
+    placeholder?: string,
 }
 
-const Input = ({ type, value, placeholder, event }: InputProps) => {
+const className = `
+                p-3 my-2
+                border-2 
+                border-gray-200 
+                rounded w-full 
+                focus:outline-none 
+                focus:bg-white 
+                focus:border-blue-500
+                `;
+
+const Input = ({ type, value, onChange, placeholder }: InputProps) => {
     return (
         <input
             type={type}
             value={value}
-            className='my-2 border-2 border-gray-200 rounded w-full p-3 
-        focus:outline-none focus:bg-white focus:border-blue-500'
+            className={className}
             placeholder={placeholder}
-            onChange={(e) => { event(e.target.value); }}
+            onChange={(e) => { onChange && onChange(e.target.value); }}
         />
     );
 }

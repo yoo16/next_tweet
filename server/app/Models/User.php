@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,13 +37,7 @@ class User extends Authenticatable
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             $user = User::where('email', $request->email)->firstOrFail();
-            if ($user->remember_token) {
-                $token = $user->remember_token;
-            } else {
-                $token = $user->createToken('auth_token')->plainTextToken;
-                $user->remember_token = $token;
-                $user->save();
-            }
+            $token = $user->createToken('auth_token', ['*'], now()->addWeek())->plainTextToken;
         }
         return $token;
     }

@@ -2,18 +2,19 @@
 
 import Link from 'next/link';
 import NavbarLink from './NavbarLink';
-import Button from './Button';
 import Image from 'next/image'
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react"
 
 import { SiLoopback } from "react-icons/si";
 import imageMe from "@/public/images/me.png";
-
-const linkClass = "hidden p-3 md:inline-block text-white";
+import { useEffect, useState } from 'react';
+import { User, initialUser } from '../models/User';
 
 const Navbar = () => {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
+  const [user, setUser] = useState<User>(initialUser);
+  const linkClass = "hidden p-3 md:inline-block text-white";
 
   return (
     <nav className="px-5 py-3 flex border-b">
@@ -26,7 +27,7 @@ const Navbar = () => {
 
       <div className="text-sm md:flex-grow">
         {
-          session?.user ? (
+          user.id ? (
             <>
               <NavbarLink href="/user/profile" label="Profile" />
               <NavbarLink href="#" label="Sign out" onClick={signOut} />
@@ -39,12 +40,12 @@ const Navbar = () => {
           )
         }
       </div>
-      {session?.user &&
+      {user.id &&
         <div className="hidden md:block">
           <div className="flex justify-end text-xs">
             <div className="flex mt-1">
               <Image src={imageMe} className="rounded-full h-8 w-8" alt="" />
-              <span className="p-2">{session.user.name}</span>
+              <span className="p-2">{user.name}</span>
             </div>
           </div>
         </div>

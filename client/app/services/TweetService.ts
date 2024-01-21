@@ -4,6 +4,7 @@ import { User } from '@/app/models/User'
 
 
 export const postTweet = async (user: User, message: string) => {
+    if (!user || !message) return;
     const url = URL_BASE + "tweet/add";
     const response = await fetch(url, {
         method: 'POST',
@@ -18,12 +19,13 @@ export const postTweet = async (user: User, message: string) => {
     }
 };
 
-export const getTweets = async (user: User) => {
+export const getTweets = async (accessToken:string) => {
+    console.log(accessToken)
     const url = URL_BASE + "tweet/get";
     const response = await fetch(url, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${user.accessToken}`,
+            'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json',
         }
     });

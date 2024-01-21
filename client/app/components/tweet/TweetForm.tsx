@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 
 interface TweetFormProps {
     onPostTweet: (message: string) => void;
@@ -8,7 +8,14 @@ interface TweetFormProps {
 
 const TweetForm = ({ onPostTweet }: TweetFormProps) => {
     const [message, setMessage] = useState("");
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+    const enableButtonClassName = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg";
+    const disableButtonClassName = "bg-blue-200 text-white font-bold py-2 px-4 rounded-lg";
 
+    const messageHandler = (e: any) => {
+        setMessage(e.target.value);
+        setIsButtonDisabled((e.target.value) ? false : true);
+    }
     const onPost = () => {
         onPostTweet(message);
         setMessage("");
@@ -16,8 +23,12 @@ const TweetForm = ({ onPostTweet }: TweetFormProps) => {
 
     return (
         <div>
-            <textarea value={message} onChange={(e) => { setMessage(e.target.value); }} className="resize-none w-full h-24 border rounded-md p-2" placeholder="今なにしてる？"></textarea>
-            <button onClick={(e) => { onPost(); }} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Send</button>
+            <textarea value={message} onChange={messageHandler} className="resize-none w-full h-24 border rounded-md p-2" placeholder="今なにしてる？"></textarea>
+            <button
+                onClick={(e) => { onPost(); }}
+                className={isButtonDisabled ? disableButtonClassName : enableButtonClassName }
+                disabled={isButtonDisabled}>
+                Send</button>
         </div>
     );
 }

@@ -11,6 +11,7 @@ Route::middleware('auth:sanctum')
     ->prefix('/tweet')
     ->group(function () {
         Route::get('get', [TweetController::class, 'get']);
+        Route::get('get/{user_id}', [TweetController::class, 'getByUserId']);
         Route::post('add', [TweetController::class, 'add']);
     });
 

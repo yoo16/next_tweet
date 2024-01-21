@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext, useEffect, useState } from 'react';
+import { Suspense, useContext, useEffect, useState } from 'react';
 import { User } from '@/app/models/User';
 import { Tweet, initialTweet } from '@/app/models/Tweet';
 import TweetList from '@/app/components/tweet/TweetList';
@@ -27,7 +27,7 @@ export default function Home() {
   }, [router, user]);
 
   const onPostTweet = async (message: string) => {
-    if (user) {
+    if (user && user.accessToken == getAccessToken()) {
       const data = await postTweet(user, message);
       setNewTweet(data);
     }
@@ -36,11 +36,12 @@ export default function Home() {
   return (
     <div>
       {
-        (user && user?.id > 0) &&
-        <>
-          <TweetForm onPostTweet={onPostTweet} />
-          <TweetList newTweet={newTweet} />
-        </>
+        (user && user?.id > 0 &&
+          <>
+            <TweetForm onPostTweet={onPostTweet} />
+            <TweetList newTweet={newTweet} />
+          </>
+        )
       }
     </div>
   )

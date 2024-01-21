@@ -6,6 +6,7 @@ import AuthProvider from "@/app/providers/AuthProvider"
 import { cookies } from "next/headers";
 import { getUser } from './services/UserService';
 import { Suspense } from 'react';
+import { User, initialUser } from './models/User';
 
 // import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 // import { getServerSession } from "next-auth/next"
@@ -22,10 +23,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode,
 }) {
-  // const session = await getServerSession(authOptions)
   var cookie = cookies().get('access_token');
   if (cookie) var user = await getUser(cookie.value);
+
+  // const session = await getServerSession(authOptions)
   // session?.user.accessToken = access_token;
+  // var user:User = initialUser;
 
   return (
     <html lang="ja">

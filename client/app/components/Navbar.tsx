@@ -16,10 +16,11 @@ import { initialUser } from '../models/User';
 
 const Navbar = () => {
   const router = useRouter();
-  var { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   // const { data: session } = useSession();
 
   const signOut = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    setUser(initialUser);
     router.push('/api/auth/logout');
     e.preventDefault();
   }
@@ -35,7 +36,7 @@ const Navbar = () => {
 
       <div className="text-sm md:flex-grow">
         {
-          user?.id ? (
+          user?.id > 0 ? (
             <>
               <NavbarLink href="/user/profile" label="Profile" />
               <NavbarLink href="#" label="Sign out" onClick={signOut} />
@@ -48,7 +49,7 @@ const Navbar = () => {
           )
         }
       </div>
-      {user?.id &&
+      {user?.id > 0 &&
         <div className="hidden md:block">
           <div className="flex justify-end text-xs">
             <div className="flex mt-1">

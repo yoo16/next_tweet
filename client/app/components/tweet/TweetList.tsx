@@ -22,9 +22,11 @@ const TweetList = ({ newTweet }: TweetListProps) => {
         const fetchTweets = async () => {
             setIsLoading(true);
             try {
-                const tweets = await getTweets(user.accessToken);
-                // const tweets = await getTweets(session?.user.accessToken as User);
-                setTweets(tweets);
+                if (user) {
+                    const tweets = await getTweets(user.accessToken);
+                    // const tweets = await getTweets(session?.user.accessToken as User);
+                    setTweets(tweets);
+                }
             } catch (error) {
 
             } finally {
@@ -32,7 +34,7 @@ const TweetList = ({ newTweet }: TweetListProps) => {
             }
         };
         fetchTweets();
-    }, [user.accessToken]);
+    }, [user]);
 
     useEffect(() => {
         setTweets(currentTweets => [newTweet, ...currentTweets]);

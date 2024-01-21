@@ -4,13 +4,13 @@ import React from "react";
 import { User, initialUser } from "../models/User";
 
 interface UserContextType {
-    user: any;
-    setUser: any;
+    user: User | undefined;
+    setUser: User | undefined;
 }
 
 const defaultValue: UserContextType = {
-    user: initialUser,
-    setUser: initialUser,
+    user: undefined,
+    setUser: undefined,
 };
 
 const UserContext = React.createContext<UserContextType>(defaultValue);

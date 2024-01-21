@@ -16,11 +16,14 @@ export default function Home() {
   const { user } = useContext(UserContext);
   const [tweet, setTweet] = useState<Tweet>(initialTweet);
   const router = useRouter();
+  const token = getAccessToken();
 
-  if (!user) {
-    router.push('/auth/login');
+  console.log('Home:', user)
+  if (!token) {
+    router.replace('/auth/login');
     return;
   }
+
   const onPostTweet = async (message: string) => {
     if (user) {
       const data = await postTweet(user, message);

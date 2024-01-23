@@ -19,7 +19,7 @@ const TweetForm = ({ onPostTweet }: TweetFormProps) => {
         setMessage("");
     }
 
-    const isDisabled = () => !!message;
+    const isDisabled = () => !message;
 
     return (
         <div>

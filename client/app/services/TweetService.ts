@@ -33,15 +33,17 @@ export const getTweetsByUserId = async (accessToken: string, userId: any) => {
 }
 
 export const postTweet = async (user: User, message: string) => {
-    if (!user || !message) return;
+    if (!user.accessToken || !user.id || !message) return;
     const url = LARAVEL_API_URL + "tweet/add";
+
+    const user_id = user.id
     const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${user.accessToken}`,
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: message, user_id: user.id }),
+        body: JSON.stringify({ message, user_id }),
     });
     if (response.ok) {
         return await response.json();

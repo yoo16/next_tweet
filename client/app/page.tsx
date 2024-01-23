@@ -1,7 +1,7 @@
 "use client"
 
 import { useContext, useEffect, useState } from 'react';
-import { Tweet, initialTweet } from '@/app/models/Tweet';
+import { Tweet } from '@/app/models/Tweet';
 import TweetList from '@/app/components/tweet/TweetList';
 import TweetForm from '@/app/components/tweet/TweetForm';
 
@@ -10,7 +10,6 @@ import { getAccessToken } from '@/app/services/UserService';
 import { User } from '@/app/models/User'
 import { useRouter } from 'next/navigation';
 import UserContext from './context/UserContext';
-import ClickButton from './components/ClickButton';
 // import { useSession } from 'next-auth/react';
 
 export default function Home() {
@@ -18,11 +17,10 @@ export default function Home() {
 
   const { user } = useContext(UserContext);
   const [tweets, setTweets] = useState<Tweet[]>([]);
-  const [newTweet, setNewTweet] = useState<Tweet>(initialTweet);
 
   useEffect(() => {
     (async () => {
-      if (!user.accessToken) {
+      if (!user?.accessToken) {
         router.replace('/auth/login');
       }
     })();
@@ -33,16 +31,14 @@ export default function Home() {
       if (user?.accessToken) {
         const data = await getTweets(user.accessToken);
         setTweets(data);
-        console.log(data);
       }
     })();
   }, [user]);
 
   const onPostTweet = async (message: string) => {
-    if (user?.accessToken == getAccessToken()) {
-      const data = await postTweet(user, message);
-      setNewTweet(data);
-    }
+    if (user?.accessToken != getAccessToken()) return;
+    const newTweet = await postTweet(user, message);
+    newTweet?.id && setTweets(currentTweets => [newTweet, ...currentTweets]);
   }
 
   return (
@@ -51,7 +47,7 @@ export default function Home() {
         user?.id > 0 &&
         <>
           <TweetForm onPostTweet={onPostTweet} />
-          <TweetList initialTweets={tweets} newTweet={newTweet} />
+          <TweetList tweets={tweets} />
         </>
       }
     </div>

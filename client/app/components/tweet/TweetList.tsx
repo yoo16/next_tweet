@@ -1,11 +1,8 @@
 "use client"
 
-import { useEffect, useState, useContext, } from 'react';
-import TweetDetail from '@/app/components/tweet/TweetDetail';
+import { useEffect, useState } from 'react';
 import { Tweet } from '@/app/models/Tweet';
-import { getTweets } from '@/app/services/TweetService';
-import UserContext from '@/app/context/UserContext';
-// import { useSession } from 'next-auth/react';
+import TweetDetail from './TweetDetail';
 
 interface TweetListProps {
     initialTweets: Tweet[];

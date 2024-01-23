@@ -4,6 +4,18 @@ import Cookies from 'js-cookie';
 const LARAVEL_API_URL = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
 const NEXT_API_URL = process.env.NEXT_PUBLIC_NEXT_API_URL;
 
+export const registUser = async (postUser: PostUser) => {
+    const url = LARAVEL_API_URL + "regist/store";
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify(postUser),
+    });
+    if (response.ok) {
+        return await response.json();
+    }
+}
+
 export const getUser = async (token: string) => {
     if (!token) return;
     const url = LARAVEL_API_URL + "user";
@@ -29,19 +41,6 @@ export const signIn = async (credentials: any) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify({ email, password }),
-    });
-    if (response.ok) {
-        return await response.json();
-    }
-}
-
-
-export const registUser = async (postUser: PostUser) => {
-    const url = LARAVEL_API_URL + "regist/store";
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', },
-        body: JSON.stringify(postUser),
     });
     if (response.ok) {
         return await response.json();

@@ -1,15 +1,15 @@
 import { FaExclamationCircle } from "react-icons/fa";
 
-interface FormErrorProps {
+interface ErrorMessageProps {
     message: string
 }
 
-const FormError = ({ message }: FormErrorProps) => {
+const FormError = ({ message }: ErrorMessageProps) => {
     if (!message) return;
     return (
         <div className='p-2 flex text-red-700 bg-red-100 rounded-lg'>
             <FaExclamationCircle className='mt-1 mx-2' />
-            <div className="">{message}</div>
+            <div>{message}</div>
         </div>
     );
 }

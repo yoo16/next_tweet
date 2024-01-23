@@ -1,13 +1,14 @@
 "use client";
 
 import { FaUser } from "react-icons/fa";
-import Link from 'next/link';
 import Input from '@/app/components/Input';
 import FormError from '@/app/components/FormError';
 import { registUser, updateAccessToken } from '@/app/services/UserService';
-import { useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
 import UserContext from "@/app/context/UserContext";
+import { useRouter } from "next/navigation";
+import ClickButton from "@/app/components/ClickButton";
+import LinkButton from "@/app/components/LinkButton";
 
 interface RegistError {
     name: string;
@@ -16,11 +17,12 @@ interface RegistError {
 }
 
 function RegistPage() {
+    const router = useRouter();
+
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState<RegistError>({ name, email, password });
-    const router = useRouter();
+    const [error, setError] = useState<RegistError>({ name: "", email: "", password: "" });
     const { setUser } = useContext(UserContext);
 
     const regist = async () => {
@@ -32,12 +34,14 @@ function RegistPage() {
             const response = await updateAccessToken(user?.accessToken);
             // console.log("regist:", user)
             // console.log("regist:", response)
-            if (response) {
+            if (user && response) {
                 setUser(user);
-                router.push('/');
+                router.replace('/');
             }
         }
     }
+
+    const isDisabled = () => !(name && email && password);
 
     return (
         <div className="mx-auto w-1/3">
@@ -47,33 +51,31 @@ function RegistPage() {
             </h1>
 
             <div>
-                <Input type="text" value={name} placeholder="Your Name" onChange={setName} />
+                <Input 
+                type="text" 
+                value={name} 
+                placeholder="Your Name" 
+                onChange={setName} />
                 <FormError message={error.name} />
 
-                <Input type="email" value={email} placeholder="Email" onChange={setEmail} />
+                <Input 
+                type="email" 
+                value={email} 
+                placeholder="Email" 
+                onChange={setEmail} />
                 <FormError message={error.email} />
 
-                <Input type="password" value={password} placeholder="Password" onChange={setPassword} />
+                <Input 
+                type="password" 
+                value={password} 
+                placeholder="Password" 
+                onChange={setPassword} />
                 <FormError message={error.password} />
             </div>
 
             <div>
-                <button
-                    className="py-2 px-4 my-3 w-full 
-                    bg-black hover:bg-gray-800 
-                    focus:shadow-outline focus:outline-none 
-                    text-white 
-                    rounded-lg"
-                    onClick={regist}
-                >Sign up</button>
-
-                <Link
-                    href="/auth/login/"
-                    className="flex justify-center 
-                    p-2 my-1 
-                    text-gray-600 bg-gray-200 hover:bg-gray-300 
-                    rounded-lg"
-                >Sign in</Link>
+                <ClickButton label="Sign up" onClick={regist} disabled={isDisabled()} />
+                <LinkButton label="Sign in" href="/auth/login" />
             </div>
         </div>
     );

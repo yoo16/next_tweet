@@ -1,6 +1,5 @@
 "use client"
 
-import Link from 'next/link';
 import Input from '@/app/components/Input';
 import { RiLockPasswordFill } from "react-icons/ri";
 
@@ -9,8 +8,9 @@ import FormError from '@/app/components/FormError';
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getUser, signIn, updateAccessToken } from '@/app/services/UserService';
-import { Button } from '@/components/ui/button';
 import UserContext from '@/app/context/UserContext';
+import LinkButton from '@/app/components/LinkButton';
+import ClickButton from '@/app/components/ClickButton';
 // import { useSession } from 'next-auth/react';
 // import { signIn } from 'next-auth/react';
 export interface Error {
@@ -35,7 +35,7 @@ const LoginPage = () => {
                 await updateAccessToken(token);
                 const user = await getUser(token)
                 setUser(user);
-                router.push('/');
+                router.replace('/');
             }
         }
         // try {
@@ -47,37 +47,34 @@ const LoginPage = () => {
         // }
     }
 
+    const isDisabled = () => !(email && password);
+
     return (
         <div className="mx-auto w-1/3">
-            <h2 className="flex p-3 me-3 text-2xl justify-center">
+            <h1 className="flex p-3 me-3 text-2xl justify-center">
                 <RiLockPasswordFill className='mt-1 me-3' />
                 Sign in
-            </h2>
+            </h1>
 
             <div>
                 <Input
                     type="email"
                     value={email}
-                    placeholder='Email'
+                    placeholder="Email"
                     onChange={setEmail}
                 />
                 <Input
                     type="password"
                     value={password}
-                    placeholder='Password'
+                    placeholder="Password"
                     onChange={setPassword}
                 />
                 <FormError message={error.auth} />
             </div>
 
             <div>
-                <Button onClick={auth} className="w-full">Sign in</Button>
-                <Link
-                    href='/auth/regist/'
-                    className="p-2 my-1 flex justify-center 
-                    text-gray-600
-                    bg-gray-200 hover:bg-gray-300 rounded-lg"
-                >Register</Link>
+                <ClickButton label="Sign in" onClick={auth} disabled={isDisabled()} />
+                <LinkButton label="Register" href="/auth/regist/" />
             </div>
         </div>
     );

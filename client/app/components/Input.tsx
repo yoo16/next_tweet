@@ -6,7 +6,8 @@ interface InputProps {
     placeholder?: string,
 }
 
-const className = `
+const Input = ({ type, value, onChange, placeholder }: InputProps) => {
+    const className = `
                 p-3 my-2
                 border-2 
                 border-gray-200 
@@ -16,7 +17,6 @@ const className = `
                 focus:border-blue-500
                 `;
 
-const Input = ({ type, value, onChange, placeholder }: InputProps) => {
     return (
         <input
             type={type}

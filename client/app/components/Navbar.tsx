@@ -21,7 +21,7 @@ const Navbar = () => {
 
   const signOut = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     setUser(initialUser);
-    router.push('/api/auth/logout');
+    router.replace('/api/auth/logout');
     e.preventDefault();
     return;
   }

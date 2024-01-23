@@ -6,7 +6,6 @@ import { User, initialUser } from "../models/User";
 import { getAccessToken, getUser } from "../services/UserService";
 // import { SessionProvider } from "next-auth/react"
 
-
 export default function AuthProvider({
     children,
     currentUser,
@@ -14,6 +13,8 @@ export default function AuthProvider({
     children: React.ReactNode,
     currentUser: User
 }): React.ReactNode {
+    // Test User
+    // const [user, setUser] = useState<User>(testUser);
     const [user, setUser] = useState<User>(currentUser);
     const value = {
         user,

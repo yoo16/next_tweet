@@ -27,25 +27,23 @@ const LoginPage = () => {
 
     const auth = async () => {
         const result = await signIn({ email, password, });
-        const token = result.access_token;
-        if (!result || result.error) {
-            setError(result?.error || { auth: "internal error" });
+        const token = result?.access_token;
+        if (token) {
+            await updateAccessToken(token);
+            const user = await getUser(token)
+            setUser(user);
+            router.replace('/');
         } else {
-            if (token) {
-                await updateAccessToken(token);
-                const user = await getUser(token)
-                setUser(user);
-                router.replace('/');
-            }
+            (result.error) && setError(result?.error)
         }
-        // try {
-        //     const result = await signIn("credentials", { email, password, });
-        //     console.log(result)
-        //     console.log('auth/login: auth()')
-        // } catch (error) {
-        //     setError({ auth: "Invalid Email or Password" });
-        // }
     }
+    // try {
+    //     const result = await signIn("credentials", { email, password, });
+    //     console.log(result)
+    //     console.log('auth/login: auth()')
+    // } catch (error) {
+    //     setError({ auth: "Invalid Email or Password" });
+    // }
 
     const isDisabled = () => !(email && password);
 

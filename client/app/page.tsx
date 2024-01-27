@@ -6,7 +6,6 @@ import TweetList from '@/app/components/tweet/TweetList';
 import TweetForm from '@/app/components/tweet/TweetForm';
 
 import { getTweets, postTweet } from '@/app/services/TweetService';
-import { getAccessToken } from '@/app/services/UserService';
 import UserContext from './context/UserContext';
 import Loading from './components/Loading';
 // import { useSession } from 'next-auth/react';
@@ -33,11 +32,7 @@ export default function Home() {
     <div>
       <TweetForm onPostTweet={onPostTweet} />
       {
-        (isLoading) ? (
-          <Loading />
-        ) : (
-          <TweetList tweets={tweets} />
-        )
+        (isLoading) ? <Loading /> : <TweetList tweets={tweets} />
       }
     </div>
   )

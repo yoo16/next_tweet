@@ -18,7 +18,7 @@ export const getTweets = async (accessToken: string) => {
 }
 
 export const getTweetsByUserId = async (accessToken: string, userId: any) => {
-    console.log(accessToken)
+    if (!accessToken || !userId) return;
     const url = LARAVEL_API_URL + "tweet/get/" + userId;
     const response = await fetch(url, {
         method: 'GET',

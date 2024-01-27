@@ -11,6 +11,7 @@ interface UserInfoProps {
 }
 
 const UserInfo = ({ tweetUser, tweets }: UserInfoProps) => {
+    if (!tweetUser) return <></>
     return (
         <div className="my-5">
             <div className="flex items-center my-3">

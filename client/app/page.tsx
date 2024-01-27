@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState, useContext, } from 'react';
 import { Tweet } from '@/app/models/Tweet';
 import TweetList from '@/app/components/tweet/TweetList';
 import TweetForm from '@/app/components/tweet/TweetForm';
@@ -20,18 +20,9 @@ export default function Home() {
 
   useEffect(() => {
     (async () => {
-      if (!user?.accessToken) {
-        router.replace('/auth/login');
-      }
-    })();
-  }, [router, user]);
-
-  useEffect(() => {
-    (async () => {
-      if (user?.accessToken) {
-        const data = await getTweets(user.accessToken);
-        setTweets(data);
-      }
+      if (!user?.accessToken) return;
+      const data = await getTweets(user.accessToken);
+      setTweets(data);
     })();
   }, [user]);
 

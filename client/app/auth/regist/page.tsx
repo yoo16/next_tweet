@@ -27,17 +27,12 @@ function RegistPage() {
 
     const regist = async () => {
         const result = await registUser({ name, email, password });
-        if (result.error) {
-            setError(result.error);
+        if (result?.user.accessToken) {
+            await updateAccessToken(result.user.accessToken);
+            setUser(result.user);
+            router.replace('/');
         } else {
-            const user = result?.user;
-            const response = await updateAccessToken(user?.accessToken);
-            // console.log("regist:", user)
-            // console.log("regist:", response)
-            if (user && response) {
-                setUser(user);
-                router.replace('/');
-            }
+            setError(result.error);
         }
     }
 
@@ -51,25 +46,25 @@ function RegistPage() {
             </h1>
 
             <div>
-                <Input 
-                type="text" 
-                value={name} 
-                placeholder="Your Name" 
-                onChange={setName} />
+                <Input
+                    type="text"
+                    value={name}
+                    placeholder="Your Name"
+                    onChange={setName} />
                 <FormError message={error.name} />
 
-                <Input 
-                type="email" 
-                value={email} 
-                placeholder="Email" 
-                onChange={setEmail} />
+                <Input
+                    type="email"
+                    value={email}
+                    placeholder="Email"
+                    onChange={setEmail} />
                 <FormError message={error.email} />
 
-                <Input 
-                type="password" 
-                value={password} 
-                placeholder="Password" 
-                onChange={setPassword} />
+                <Input
+                    type="password"
+                    value={password}
+                    placeholder="Password"
+                    onChange={setPassword} />
                 <FormError message={error.password} />
             </div>
 

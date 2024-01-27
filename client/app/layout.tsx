@@ -33,7 +33,7 @@ export default async function RootLayout({
   return (
     <html lang="ja">
       <body>
-        <AuthProvider currentUser={user}>
+        <AuthProvider>
           <Navbar />
           <main className="flex min-h-screen flex-col p-5">
             {children}

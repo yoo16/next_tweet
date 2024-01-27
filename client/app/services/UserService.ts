@@ -52,10 +52,8 @@ export const getAccessToken = () => {
 }
 
 export const updateAccessToken = async (token: string) => {
-    if (token) {
-        Cookies.set("access_token", token, { expires: 30 })
-        return token;
-    }
+    if (!token) return;
+    Cookies.set("access_token", token, { expires: 30 })
     // const url = NEXT_API_URL + "auth/login";
     // const response = await fetch(url, {
     //     method: 'POST',

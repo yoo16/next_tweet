@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useContext, } from 'react';
+import { useContext, } from 'react';
 import TweetDetail from '@/app/components/tweet/TweetDetail';
 import { Tweet } from '@/app/models/Tweet';
 import { getTweets, getTweetsByUserId } from '@/app/services/TweetService';

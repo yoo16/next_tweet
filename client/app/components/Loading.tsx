@@ -1,9 +1,9 @@
-import { FaSpinner } from "react-icons/fa";
+import { BeatLoader } from 'react-spinners';
 
 const Loading = () => {
     return (
-        <div>
-            <FaSpinner className="h-[100px] w-[100px]" />
+        <div className="flex justify-center items-center">
+            <BeatLoader size={15} margin={5} color="#03100d" />
         </div>
     )
 }

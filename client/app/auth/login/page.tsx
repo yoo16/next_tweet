@@ -1,13 +1,14 @@
 "use client"
 
-import Input from '@/app/components/Input';
 import { RiLockPasswordFill } from "react-icons/ri";
 
+import Input from '@/app/components/Input';
 import FormError from '@/app/components/FormError';
 
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getUser, signIn, updateAccessToken } from '@/app/services/UserService';
+import { getAccessToken, getUser, signIn } from '@/app/services/UserService';
+
 import UserContext from '@/app/context/UserContext';
 import LinkButton from '@/app/components/LinkButton';
 import ClickButton from '@/app/components/ClickButton';
@@ -18,32 +19,37 @@ export interface Error {
 }
 
 const LoginPage = () => {
+    const router = useRouter();
+    const token = getAccessToken();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<Error>({ auth: "" });
-    const router = useRouter();
     const { setUser } = useContext(UserContext);
     // const { data: session } = useSession();
 
+    const checkUser = async (token: string) => {
+        const user = await getUser(token);
+        setUser(user);
+        return (user?.accessToken) && router.replace('/');
+    }
+
     const auth = async () => {
         const result = await signIn({ email, password, });
-        const token = result?.access_token;
-        if (token) {
-            await updateAccessToken(token);
-            const user = await getUser(token)
-            setUser(user);
-            router.replace('/');
+        if (result?.error) {
+            setError(result.error)
         } else {
-            (result.error) && setError(result?.error)
+            checkUser(result?.access_token);
         }
     }
-    // try {
-    //     const result = await signIn("credentials", { email, password, });
-    //     console.log(result)
-    //     console.log('auth/login: auth()')
-    // } catch (error) {
-    //     setError({ auth: "Invalid Email or Password" });
-    // }
+
+    useEffect(() => {
+        (async () => {
+            console.log("user/login", token)
+            if (!token) return;
+            checkUser(token);
+        })
+    }, [token])
 
     const isDisabled = () => !(email && password);
 

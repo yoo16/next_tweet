@@ -3,7 +3,7 @@ const LARAVEL_API_URL = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
 import { User } from '@/app/models/User'
 
 export const getTweets = async (accessToken: string) => {
-    console.log(accessToken)
+    if (!accessToken) return;
     const url = LARAVEL_API_URL + "tweet/get";
     const response = await fetch(url, {
         method: 'GET',

@@ -7,17 +7,18 @@ import { getAccessToken, getUser } from "../services/UserService";
 import Cookies from "js-cookie";
 // import { SessionProvider } from "next-auth/react"
 
-export default function AuthProvider({
+export default function UserProvider({
     children,
 }: {
     children: React.ReactNode,
 }): React.ReactNode {
-    const [user, setUser] = useState(initialUser)
-    const token = Cookies.get('access_token');
+    console.log("--- UserProvider ---")
 
-    console.log("--- AuthProvider ---")
+    const [user, setUser] = useState(initialUser)
+
     useEffect(() => {
         (async () => {
+            const token = Cookies.get('access_token');
             if (token) {
                 const user = await getUser(token);
                 console.log("AuthProvider:", user)

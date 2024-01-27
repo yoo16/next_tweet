@@ -23,7 +23,7 @@ const UserInfo = ({ tweetUser, tweets }: UserInfoProps) => {
                 <span>{tweets.length} posted.</span>
             </div>
             <div className="my-5">
-                <Image src={imageMe} className="rounded-full h-[100px] w-[100px]" alt="" />
+                <Image src={imageMe} className="my-3 rounded-full h-[100px] w-[100px]" alt="" />
                 <span className="text-2xl">
                     {tweetUser.name}
                 </span>

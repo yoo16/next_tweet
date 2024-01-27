@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import UserContext from '../context/UserContext';
 import { initialUser } from '../models/User';
+import { removeAccessToken } from '../services/UserService';
 
 // import { signOut } from "next-auth/react";
 // import { useSession } from "next-auth/react"
@@ -21,7 +22,9 @@ const Navbar = () => {
 
   const signOut = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     setUser(initialUser);
-    router.replace('/api/auth/logout');
+    await removeAccessToken();
+    router.replace('/auth/login');
+    // router.replace('/api/auth/logout');
     e.preventDefault();
     return;
   }

@@ -7,39 +7,37 @@ import TweetForm from '@/app/components/tweet/TweetForm';
 
 import { getTweets, postTweet } from '@/app/services/TweetService';
 import { getAccessToken } from '@/app/services/UserService';
-import { User } from '@/app/models/User'
-import { useRouter } from 'next/navigation';
 import UserContext from './context/UserContext';
+import Loading from './components/Loading';
 // import { useSession } from 'next-auth/react';
 
 export default function Home() {
-  const router = useRouter();
-
   const { user } = useContext(UserContext);
   const [tweets, setTweets] = useState<Tweet[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      if (!user?.accessToken) return;
       const data = await getTweets(user.accessToken);
       setTweets(data);
+      setIsLoading(false)
     })();
   }, [user]);
 
   const onPostTweet = async (message: string) => {
-    if (user?.accessToken != getAccessToken()) return;
     const newTweet = await postTweet(user, message);
     newTweet?.id && setTweets(currentTweets => [newTweet, ...currentTweets]);
   }
 
   return (
     <div>
+      <TweetForm onPostTweet={onPostTweet} />
       {
-        user?.id > 0 &&
-        <>
-          <TweetForm onPostTweet={onPostTweet} />
+        (isLoading) ? (
+          <Loading />
+        ) : (
           <TweetList tweets={tweets} />
-        </>
+        )
       }
     </div>
   )

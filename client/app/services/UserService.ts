@@ -1,5 +1,12 @@
+"use client"
+
 import { PostUser } from '@/app/models/User';
 import Cookies from 'js-cookie';
+
+interface Credentials {
+    email: string;
+    password: string;
+}
 
 const LARAVEL_API_URL = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
 const NEXT_API_URL = process.env.NEXT_PUBLIC_NEXT_API_URL;
@@ -17,6 +24,7 @@ export const registUser = async (postUser: PostUser) => {
 }
 
 export const getUser = async (token: string) => {
+    console.log(token)
     if (!token) return;
     const url = LARAVEL_API_URL + "user";
     const response = await fetch(url, {
@@ -33,7 +41,10 @@ export const getUser = async (token: string) => {
     }
 }
 
-export const signIn = async (credentials: any) => {
+export const signIn = async (credentials: Credentials) => {
+    //TODO: Validate
+    if (!(credentials.email && credentials.password)) return;
+
     const url = LARAVEL_API_URL + "auth";
     const email: string = credentials.email
     const password: string = credentials.password;
@@ -43,24 +54,25 @@ export const signIn = async (credentials: any) => {
         body: JSON.stringify({ email, password }),
     });
     if (response.ok) {
-        return await response.json();
+        const result = await response.json();
+        updateAccessToken(result?.access_token);
+        return result;
     }
 }
 
+export const signOut = async () => {
+    await removeAccessToken();
+}
+
 export const getAccessToken = () => {
-    return Cookies.get('access_token');
+    return Cookies.get('access_token') || "";
 }
 
 export const updateAccessToken = async (token: string) => {
     if (!token) return;
-    Cookies.set("access_token", token, { expires: 30 })
-    // const url = NEXT_API_URL + "auth/login";
-    // const response = await fetch(url, {
-    //     method: 'POST',
-    //     headers: {
-    //         'Authorization': `Bearer ${token}`,
-    //         'Content-Type': 'application/json',
-    //     },
-    // });
-    // return response;
+    await Cookies.set("access_token", token, { expires: 30 });
+}
+
+export const removeAccessToken = async () => {
+    await Cookies.remove("access_token");
 }

@@ -12,6 +12,7 @@ import { getAccessToken, getUser, signIn } from '@/app/services/UserService';
 import UserContext from '@/app/context/UserContext';
 import LinkButton from '@/app/components/LinkButton';
 import ClickButton from '@/app/components/ClickButton';
+import Loading from "@/app/components/Loading";
 // import { useSession } from 'next-auth/react';
 // import { signIn } from 'next-auth/react';
 export interface Error {
@@ -21,11 +22,12 @@ export interface Error {
 const LoginPage = () => {
     const router = useRouter();
     const token = getAccessToken();
+    const { setUser } = useContext(UserContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<Error>({ auth: "" });
-    const { setUser } = useContext(UserContext);
+    const [isLoadig, setIsLoadig] = useState(false);
     // const { data: session } = useSession();
 
     const checkUser = async (token: string) => {
@@ -35,12 +37,14 @@ const LoginPage = () => {
     }
 
     const auth = async () => {
+        setIsLoadig(true);
         const result = await signIn({ email, password, });
         if (result?.error) {
             setError(result.error)
         } else {
             checkUser(result?.access_token);
         }
+        setIsLoadig(false);
     }
 
     useEffect(() => {
@@ -76,10 +80,14 @@ const LoginPage = () => {
                 <FormError message={error.auth} />
             </div>
 
-            <div>
-                <ClickButton label="Sign in" onClick={auth} disabled={isDisabled()} />
-                <LinkButton label="Register" href="/auth/regist/" />
-            </div>
+            {(isLoadig) ?
+                <Loading />
+                :
+                <div>
+                    <ClickButton label="Sign in" onClick={auth} disabled={isDisabled()} />
+                    <LinkButton label="Register" href="/auth/regist/" />
+                </div>
+            }
         </div>
     );
 }

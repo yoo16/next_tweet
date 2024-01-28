@@ -7,7 +7,7 @@ interface ErrorMessageProps {
 const FormError = ({ message }: ErrorMessageProps) => {
     if (!message) return;
     return (
-        <div className='p-2 flex text-red-700 bg-red-100 rounded-lg'>
+        <div className='my-2 p-2 flex text-red-700 bg-red-100 rounded-lg'>
             <FaExclamationCircle className='mt-1 mx-2' />
             <div>{message}</div>
         </div>

@@ -9,9 +9,10 @@ interface Credentials {
 }
 
 const LARAVEL_API_URL = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
-const NEXT_API_URL = process.env.NEXT_PUBLIC_NEXT_API_URL;
+// const NEXT_API_URL = process.env.NEXT_PUBLIC_NEXT_API_URL;
 
 export const registUser = async (postUser: PostUser) => {
+    if (!postUser) return;
     const url = LARAVEL_API_URL + "regist/store";
     const response = await fetch(url, {
         method: 'POST',
@@ -24,7 +25,6 @@ export const registUser = async (postUser: PostUser) => {
 }
 
 export const getUser = async (token: string) => {
-    console.log(token)
     if (!token) return;
     const url = LARAVEL_API_URL + "user";
     const response = await fetch(url, {
@@ -58,10 +58,6 @@ export const signIn = async (credentials: Credentials) => {
         updateAccessToken(result?.access_token);
         return result;
     }
-}
-
-export const signOut = async () => {
-    await removeAccessToken();
 }
 
 export const getAccessToken = () => {

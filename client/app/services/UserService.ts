@@ -57,4 +57,3 @@ export const signIn = async (credentials: Credentials) => {
         return result;
     }
 }
-

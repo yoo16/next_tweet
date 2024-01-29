@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
@@ -12,6 +13,7 @@ export const authOptions: NextAuthOptions = {
     debug: false,
     pages: {
         signIn: '/auth/login',
+        error: '/auth/login',
     },
     session: { strategy: "jwt" },
     providers: [
@@ -31,11 +33,10 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 console.log("authorize():", credentials)
-                // if (!credentials?.email || !credentials?.password) return;
+                if (!credentials?.email || !credentials?.password) return;
 
                 const email = credentials?.email || "";
                 const password = credentials?.password || "";
-                console.log("authorize():", email, password)
                 const result = await signIn({ email, password });
 
                 if (result?.access_token) {
@@ -49,22 +50,17 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
             console.log('--- signIn ---')
-            // console.log(user, account, profile, email, credentials)
+            console.log(user)
             return true;
         },
         async redirect({ url, baseUrl }) {
-            console.log('---- redirect ---', baseUrl)
             return baseUrl
         },
         async jwt({ token, user }) {
-            console.log('---- jwt ---')
-            // console.log(token, user)
             return { ...token, ...user }
         },
         async session({ session, token }) {
-            console.log('---- session ---')
             session.user = token as Session["user"];
-            console.log(session)
             return session;
         },
     }

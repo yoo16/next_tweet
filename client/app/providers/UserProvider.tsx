@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import UserContext from "../context/UserContext";
 import { initialUser } from "../models/User";
 import { getUser } from "../services/UserService";
-import Cookies from "js-cookie";
+import { getAccessToken } from "../services/CookieService";
 
 export default function UserProvider({
     children,
@@ -15,7 +15,7 @@ export default function UserProvider({
 
     useEffect(() => {
         (async () => {
-            const token = await Cookies.get('access_token') || "";
+            const token = await getAccessToken();
             const user = await getUser(token);
             console.log("AuthProvider:", user)
             setUser(user);

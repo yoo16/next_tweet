@@ -8,16 +8,23 @@ import TweetForm from '@/app/components/tweet/TweetForm';
 import { getTweets, postTweet } from '@/app/services/TweetService';
 import UserContext from './context/UserContext';
 import Loading from './components/Loading';
-// import { useSession } from 'next-auth/react';
+import { User, testUser } from './models/User';
+import { useSession } from 'next-auth/react';
 
 export default function Home() {
-  const { user } = useContext(UserContext);
+  // const { user, setUser } = useContext(UserContext);
+  // const [user, setUser] = useState<User>(testUser);
+  const { data: session } = useSession();
+  const user: User = session?.user as User;
+
   const [tweets, setTweets] = useState<Tweet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      const data = await getTweets(user.accessToken);
+      if (!user?.accessToken) return;
+      setIsLoading(true)
+      const data = await getTweets(user?.accessToken);
       setTweets(data);
       setIsLoading(false)
     })();

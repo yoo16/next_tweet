@@ -1,7 +1,6 @@
-"use client"
+// "use client"
 
 import { PostUser } from '@/app/models/User';
-import Cookies from 'js-cookie';
 
 interface Credentials {
     email: string;
@@ -42,8 +41,8 @@ export const getUser = async (token: string) => {
 }
 
 export const signIn = async (credentials: Credentials) => {
+    console.log("signIn:", credentials.email, credentials.password)
     //TODO: Validate
-    if (!(credentials.email && credentials.password)) return;
 
     const url = LARAVEL_API_URL + "auth";
     const email: string = credentials.email
@@ -55,20 +54,7 @@ export const signIn = async (credentials: Credentials) => {
     });
     if (response.ok) {
         const result = await response.json();
-        updateAccessToken(result?.access_token);
         return result;
     }
 }
 
-export const getAccessToken = () => {
-    return Cookies.get('access_token') || "";
-}
-
-export const updateAccessToken = async (token: string) => {
-    if (!token) return;
-    await Cookies.set("access_token", token, { expires: 30 });
-}
-
-export const removeAccessToken = async () => {
-    await Cookies.remove("access_token");
-}

@@ -1,10 +1,8 @@
 "use client"
 
-import { useContext } from 'react'
 import Image from 'next/image';
-// import { useSession } from 'next-auth/react';
-
 import imageMe from "@/public/images/me.png";
+import { useContext } from 'react'
 import UserContext from '@/app/context/UserContext';
 
 const ProfilePage = () => {

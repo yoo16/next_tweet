@@ -24,19 +24,22 @@ export const authOptions: NextAuthOptions = {
             name: "Sign in",
             credentials: {
                 email: { label: 'Email', type: 'email', placeholder: 'Email' },
-                password: { label: 'Password', type: 'password', placeholder: '******' }
+                password: { label: 'Password', type: 'password', placeholder: 'Password' }
             },
             async authorize(credentials) {
-                console.log('--- authorize() ---')
-                const authResult = await signIn(credentials)
-                const accessToken = authResult.access_token
-                console.log("access_token:", accessToken)
-                if (accessToken) {
-                    const user = await getUser(accessToken);
-                    user.accessToken = accessToken;
-                    return user
+                console.log("authorize():", credentials)
+                // if (!credentials?.email || !credentials?.password) return;
+
+                const email = credentials?.email || "";
+                const password = credentials?.password || "";
+                console.log("authorize():", email, password)
+                const result = await signIn({ email, password });
+
+                if (result?.access_token) {
+                    const user = getUser(result?.access_token);
+                    return user;
                 }
-                return false
+                return false;
             },
         }),
     ],
@@ -47,7 +50,7 @@ export const authOptions: NextAuthOptions = {
             return true;
         },
         async redirect({ url, baseUrl }) {
-            console.log('---- redirect ---')
+            console.log('---- redirect ---', baseUrl)
             return baseUrl
         },
         async jwt({ token, user }) {

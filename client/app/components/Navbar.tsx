@@ -6,28 +6,29 @@ import Image from 'next/image'
 
 import { SiLoopback } from "react-icons/si";
 import imageMe from "@/public/images/me.png";
-import { useRouter } from 'next/navigation';
-import { useContext } from 'react';
-import UserContext from '../context/UserContext';
-import { initialUser } from '../models/User';
-import { removeAccessToken } from '../services/UserService';
+import { User, initialUser } from '../models/User';
 
-// import { signOut } from "next-auth/react";
-// import { useSession } from "next-auth/react"
+import { signOut, useSession } from 'next-auth/react';
+
+// import { useRouter } from 'next/navigation';
+// import { useContext } from 'react';
+// import UserContext from '../context/UserContext';
+// import { removeAccessToken } from '@/app/services/CookieService';
 
 const Navbar = () => {
-  const router = useRouter();
-  const { user, setUser } = useContext(UserContext);
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
+  const user: User = session?.user as User;
 
-  const signOut = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-    setUser(initialUser);
-    await removeAccessToken();
-    router.replace('/auth/login');
-    // router.replace('/api/auth/logout');
-    e.preventDefault();
-    return;
-  }
+  // const router = useRouter();
+  // const { user, setUser } = useContext(UserContext);
+
+  // const signOut = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  //   await setUser(initialUser);
+  //   await removeAccessToken();
+  //   router.replace('/auth/login');
+  //   e.preventDefault();
+  //   return;
+  // }
 
   return (
     <nav className="px-5 py-3 flex border-b">
@@ -43,7 +44,7 @@ const Navbar = () => {
           user?.id > 0 ? (
             <>
               <NavbarLink href="/user/profile" label="Profile" />
-              <NavbarLink href="#" label="Sign out" onClick={signOut} />
+              <NavbarLink href="#" label="Sign out" onClick={() => { signOut() }} />
             </>
           ) : (
             <>

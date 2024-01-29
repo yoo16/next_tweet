@@ -7,22 +7,21 @@ import FormError from '@/app/components/FormError';
 
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getAccessToken, getUser, signIn } from '@/app/services/UserService';
+// import { getAccessToken, getUser, signIn } from '@/app/services/UserService';
 
-import UserContext from '@/app/context/UserContext';
 import LinkButton from '@/app/components/LinkButton';
 import ClickButton from '@/app/components/ClickButton';
 import Loading from "@/app/components/Loading";
-// import { useSession } from 'next-auth/react';
-// import { signIn } from 'next-auth/react';
+// import UserContext from '@/app/context/UserContext';
+import { signIn } from 'next-auth/react';
 export interface Error {
     auth: string;
 }
 
 const LoginPage = () => {
-    const router = useRouter();
-    const token = getAccessToken();
-    const { setUser } = useContext(UserContext);
+    // const router = useRouter();
+    // const token = getAccessToken();
+    // const { setUser } = useContext(UserContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -30,30 +29,35 @@ const LoginPage = () => {
     const [isLoadig, setIsLoadig] = useState(false);
     // const { data: session } = useSession();
 
-    const checkUser = async (token: string) => {
-        const user = await getUser(token);
-        setUser(user);
-        return (user?.accessToken) && router.replace('/');
-    }
+    // const checkUser = async (token: string) => {
+    //     const user = await getUser(token);
+    //     await setUser(user);
+    //     return (user?.accessToken) && router.replace('/');
+    // }
+
+    // const auth = async () => {
+    //     setIsLoadig(true);
+    //     const result = await signIn({ email, password, });
+    //     if (result?.error) {
+    //         setError(result.error)
+    //     } else {
+    //         checkUser(result?.access_token);
+    //     }
+    //     setIsLoadig(false);
+    // }
+
+    // useEffect(() => {
+    //     (async () => {
+    //         console.log("user/login", token)
+    //         if (!token) return;
+    //         checkUser(token);
+    //     })
+    // }, [token])
 
     const auth = async () => {
         setIsLoadig(true);
-        const result = await signIn({ email, password, });
-        if (result?.error) {
-            setError(result.error)
-        } else {
-            checkUser(result?.access_token);
-        }
-        setIsLoadig(false);
+        await signIn('credentials', { email, password });
     }
-
-    useEffect(() => {
-        (async () => {
-            console.log("user/login", token)
-            if (!token) return;
-            checkUser(token);
-        })
-    }, [token])
 
     const isDisabled = () => !(email && password);
 

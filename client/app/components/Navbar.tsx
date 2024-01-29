@@ -9,6 +9,7 @@ import imageMe from "@/public/images/me.png";
 import { User, initialUser } from '../models/User';
 
 import { signOut, useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 // import { useRouter } from 'next/navigation';
 // import { useContext } from 'react';
@@ -18,6 +19,7 @@ import { signOut, useSession } from 'next-auth/react';
 const Navbar = () => {
   const { data: session } = useSession();
   const user: User = session?.user as User;
+  const [isLoading, setIsLoading] = useState(true);
 
   // const router = useRouter();
   // const { user, setUser } = useContext(UserContext);
@@ -29,6 +31,9 @@ const Navbar = () => {
   //   e.preventDefault();
   //   return;
   // }
+  useEffect(() => {
+    setIsLoading(false)
+  })
 
   return (
     <nav className="px-5 py-3 flex border-b">
@@ -41,17 +46,20 @@ const Navbar = () => {
 
       <div className="text-sm md:flex-grow">
         {
-          user?.id > 0 ? (
-            <>
-              <NavbarLink href="/user/profile" label="Profile" />
-              <NavbarLink href="#" label="Sign out" onClick={() => { signOut() }} />
-            </>
-          ) : (
-            <>
-              <NavbarLink href="/auth/regist" label="Register" />
-              <NavbarLink href="/auth/login" label="Sign in" />
-            </>
-          )
+          isLoading ?
+            <></>
+            :
+            user?.id > 0 ? (
+              <>
+                <NavbarLink href="/user/profile" label="Profile" />
+                <NavbarLink href="#" label="Sign out" onClick={() => { signOut() }} />
+              </>
+            ) : (
+              <>
+                <NavbarLink href="/auth/regist" label="Register" />
+                <NavbarLink href="/auth/login" label="Sign in" />
+              </>
+            )
         }
       </div>
       {user?.id > 0 &&

@@ -4,10 +4,13 @@ import Image from 'next/image';
 import imageMe from "@/public/images/me.png";
 import { useContext } from 'react'
 import UserContext from '@/app/context/UserContext';
+import { User } from '@/app/models/User';
+import { useSession } from 'next-auth/react';
 
 const ProfilePage = () => {
-    const { user } = useContext(UserContext);
-    console.log("ProfilePage:", user)
+    // const { user } = useContext(UserContext);
+    const { data: session } = useSession();
+    const user: User = session?.user as User;
 
     if (!user) return <></>
 

@@ -3,7 +3,8 @@
 import { FaUser } from "react-icons/fa";
 import Input from '@/app/components/Input';
 import FormError from '@/app/components/FormError';
-import { registUser, updateAccessToken } from '@/app/services/UserService';
+import { registUser } from '@/app/services/UserService';
+import { updateAccessToken } from '@/app/services/CookieService';
 import { useContext, useState } from 'react';
 import UserContext from "@/app/context/UserContext";
 import { useRouter } from "next/navigation";

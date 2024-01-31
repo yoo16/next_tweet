@@ -1,3 +1,4 @@
+import { TweetImage } from './TweetImage';
 import { User, initialUser } from './User'
 export interface Tweet {
     id: number;
@@ -6,7 +7,7 @@ export interface Tweet {
     created_at: string;
     updated_at: string;
     user: User;
-    image: any;
+    image: TweetImage[];
 }
 
 export const initialTweet: Tweet = {

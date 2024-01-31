@@ -64,7 +64,7 @@ export const postTweet = async (user: User, message: string) => {
     }
 }
 
-export const uploadImage = async (image, accessToken:string) => {
+export const uploadImage = async (image:Blob, accessToken:string) => {
     try {
         const formData = new FormData();
         formData.append("photo", image);

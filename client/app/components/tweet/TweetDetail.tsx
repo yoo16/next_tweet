@@ -36,6 +36,13 @@ const TweetDetail = ({ tweet }: TweetDetailProps) => {
                 <div className="whitespace-pre-wrap mt-2 mb-2">
                     {tweet.message}
                 </div>
+                <div className="flex">
+                    {
+                        tweet.image?.map((image) => (
+                            <img className="max-h-64 m-2" key={image.id} src={`http://localhost:8001/storage/${image.file}`} alt="" />
+                        ))
+                    }
+                </div>
             </div>
         </div>
     );

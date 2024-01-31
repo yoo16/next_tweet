@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TweetRequest;
 use App\Models\Tweet;
+use App\Models\TweetImage;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class TweetController extends Controller
@@ -13,6 +15,7 @@ class TweetController extends Controller
     function get()
     {
         $tweets = Tweet::with('user')
+            ->with('image')
             ->orderBy('created_at', 'desc')
             ->limit(25)
             ->get();
@@ -23,6 +26,7 @@ class TweetController extends Controller
     {
         $user = User::find($user_id);
         $tweets = Tweet::with('user')
+            ->with('tweet_image')
             ->where('user_id', $user_id)
             ->orderBy('created_at', 'desc')
             ->limit(25)
@@ -40,6 +44,18 @@ class TweetController extends Controller
             return response()->json($tweet);
         } else {
             return response()->json(['error' => 'invalid tweet'], 401);
+        }
+    }
+
+    function uploadImage(Request $request)
+    {
+        $image = $request->file('image');
+        if ($image && $request->tweet_id) {
+            Log::debug($request->tweet_id);
+            Log::debug($image);
+            $path = $image->store('images', 'public');
+            TweetImage::create(['file' => $path, 'tweet_id' => $request->tweet_id]);
+            return response()->json(['path' => $path], 201);
         }
     }
 }

@@ -63,3 +63,25 @@ export const postTweet = async (user: User, message: string) => {
         console.log(error)
     }
 }
+
+export const uploadImage = async (image, accessToken:string) => {
+    try {
+        const formData = new FormData();
+        formData.append("photo", image);
+
+        const url = LARAVEL_API_URL + "tweet/upload_image";
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'multipart/form-data',
+            },
+            body: formData,
+        });
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}

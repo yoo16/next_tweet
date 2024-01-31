@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import ClickButton from '../ClickButton';
+import UploadImage from '../UploadImage';
 
 interface TweetFormProps {
     onPostTweet: (message: string) => void;
@@ -28,6 +29,9 @@ const TweetForm = ({ onPostTweet }: TweetFormProps) => {
                 onChange={messageHandler}
                 className="resize-none w-full h-24 border rounded-md p-2"
                 placeholder="今なにしてる？"></textarea>
+
+            <UploadImage />
+
             <ClickButton label="Post" onClick={onPost} disabled={isDisabled()} />
         </div>
     );

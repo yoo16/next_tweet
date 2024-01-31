@@ -14,6 +14,7 @@ Route::middleware('auth:sanctum')
         Route::get('get/{user_id}', [TweetController::class, 'getByUserId']);
         Route::post('add', [TweetController::class, 'add']);
         Route::post('/user/{id}', [UserController::class, 'get']);
+        Route::post('upload_image', [TweetController::class, 'uploadImage']);
     });
 
 Route::post('/auth', [AuthController::class, 'auth']);

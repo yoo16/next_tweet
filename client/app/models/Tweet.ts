@@ -6,6 +6,7 @@ export interface Tweet {
     created_at: string;
     updated_at: string;
     user: User;
+    image: any;
 }
 
 export const initialTweet: Tweet = {
@@ -15,4 +16,5 @@ export const initialTweet: Tweet = {
     created_at: '',
     updated_at: '',
     user: initialUser,
+    image: [],
   };

@@ -10,6 +10,8 @@ import { User, initialUser } from '../models/User';
 
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import Loading from './Loading';
+import Humberger from './Humberger';
 
 // import { useRouter } from 'next/navigation';
 // import { useContext } from 'react';
@@ -19,7 +21,6 @@ import { useEffect, useState } from 'react';
 const Navbar = () => {
   const { data: session } = useSession();
   const user: User = session?.user as User;
-  const [isLoading, setIsLoading] = useState(true);
 
   // const router = useRouter();
   // const { user, setUser } = useContext(UserContext);
@@ -31,9 +32,10 @@ const Navbar = () => {
   //   e.preventDefault();
   //   return;
   // }
-  useEffect(() => {
-    setIsLoading(false)
-  })
+
+  const logout = async () => {
+    await signOut();
+  }
 
   return (
     <nav className="px-5 py-3 flex border-b">
@@ -46,20 +48,17 @@ const Navbar = () => {
 
       <div className="text-sm md:flex-grow">
         {
-          isLoading ?
-            <></>
-            :
-            user?.id > 0 ? (
-              <>
-                <NavbarLink href="/user/profile" label="Profile" />
-                <NavbarLink href="#" label="Sign out" onClick={() => { signOut() }} />
-              </>
-            ) : (
-              <>
-                <NavbarLink href="/auth/regist" label="Register" />
-                <NavbarLink href="/auth/login" label="Sign in" />
-              </>
-            )
+          user?.id > 0 ? (
+            <>
+              <NavbarLink href="/user/profile" label="Profile" />
+              <NavbarLink href="#" label="Sign out" onClick={logout} />
+            </>
+          ) : (
+            <>
+              <NavbarLink href="/auth/regist" label="Register" />
+              <NavbarLink href="/auth/login" label="Sign in" />
+            </>
+          )
         }
       </div>
       {user?.id > 0 &&
@@ -72,15 +71,7 @@ const Navbar = () => {
           </div>
         </div>
       }
-      <div className="block md:hidden">
-        <button className="flex items-center px-1 py-2">
-          <div className="p-1 space-y-1">
-            <span className="block w-6 h-0.5 bg-white"></span>
-            <span className="block w-6 h-0.5 bg-white"></span>
-            <span className="block w-6 h-0.5 bg-white"></span>
-          </div>
-        </button>
-      </div>
+      <Humberger />
     </nav>
   )
 }

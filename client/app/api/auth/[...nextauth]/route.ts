@@ -5,9 +5,11 @@ import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import AppleProvider from "next-auth/providers/apple";
 import FacebookProvider from "next-auth/providers/facebook";
+import { cookies } from "next/headers";
 
 import { signIn, getUser } from '@/app/services/UserService';
 import { Session } from "next-auth";
+import { updateAccessToken } from '@/app/services/CookieService';
 
 export const authOptions: NextAuthOptions = {
     debug: false,
@@ -35,12 +37,10 @@ export const authOptions: NextAuthOptions = {
                 console.log("authorize():", credentials)
                 if (!credentials?.email || !credentials?.password) return;
 
-                const email = credentials?.email || "";
-                const password = credentials?.password || "";
-                const result = await signIn({ email, password });
-
+                const result = await signIn(credentials);
                 if (result?.access_token) {
-                    const user = getUser(result?.access_token);
+                    await cookies().set('access_token', result.access_token);
+                    const user = await getUser(result?.access_token);
                     return user;
                 }
                 return false;

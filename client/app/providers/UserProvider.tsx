@@ -15,7 +15,7 @@ export default function UserProvider({
 
     useEffect(() => {
         (async () => {
-            const token = await getAccessToken();
+            const token = await getAccessToken()!;
             const user = await getUser(token);
             console.log("AuthProvider:", user)
             setUser(user);

@@ -14,6 +14,11 @@ export interface PostUser {
     password: string;
 };
 
+export interface Credentials {
+    email: string;
+    password: string;
+}
+
 export const initialUser: User = {
     id: 0,
     name: '',

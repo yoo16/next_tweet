@@ -6,10 +6,10 @@ import TweetList from '@/app/components/tweet/TweetList';
 import TweetForm from '@/app/components/tweet/TweetForm';
 
 import { getTweets, postTweet } from '@/app/services/TweetService';
-import UserContext from './context/UserContext';
 import Loading from './components/Loading';
 import { User, testUser } from './models/User';
 import { useSession } from 'next-auth/react';
+// import UserContext from './context/UserContext';
 
 export default function Home() {
   // const { user, setUser } = useContext(UserContext);

@@ -1,6 +1,11 @@
- export { default } from "next-auth/middleware";
+import { NextRequest, NextResponse } from 'next/server';
 
-// import { NextRequest, NextResponse } from 'next/server';
+export { default } from "next-auth/middleware";
+
+// export async function middleware(req: NextRequest) {
+//     console.log("Middleware")
+// }
+
 // import { getUser } from '@/app/services/UserService';
 // import { User } from '@/app/models/User';
 

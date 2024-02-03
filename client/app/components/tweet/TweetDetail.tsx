@@ -4,14 +4,23 @@ import type { Tweet } from '@/app/models/Tweet';
 import Image from "next/image";
 import imageMe from "@/public/images/me.png";
 import Link from 'next/link';
+import { TweetImage } from '@/app/models/TweetImage';
+import { uploadImage } from '@/app/services/TweetService';
 
 interface TweetDetailProps {
     tweet: Tweet;
 }
 
 const TweetDetail = ({ tweet }: TweetDetailProps) => {
+    const UPLOAD_IMAGE_URL = process.env.NEXT_PUBLIC_UPLOAD_IMAGE_URL;
     const dateFormat = (dateString: string) => {
         return new Date(dateString).toLocaleString('ja-JP');
+    }
+
+    const imageURL = (image: TweetImage) => {
+        if (!image) return "";
+        const url = UPLOAD_IMAGE_URL + image.file;
+        return url;
     }
 
     return (
@@ -39,11 +48,13 @@ const TweetDetail = ({ tweet }: TweetDetailProps) => {
                 <div className="flex">
                     {
                         tweet.image && tweet.image?.map((image) => (
-                            <img 
-                            className="max-h-64 m-2" 
-                            key={image.id} 
-                            src={`http://localhost:8001/storage/${image.file}`} 
-                            alt="" />
+                            <Image
+                                className="max-h-64 m-2"
+                                key={image.id}
+                                src={imageURL(image)}
+                                width={200}
+                                height={200}
+                                alt="" />
                         ))
                     }
                 </div>

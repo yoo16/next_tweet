@@ -1,23 +1,30 @@
 "use client"
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import ClickButton from '../ClickButton';
 import UploadImage from '../UploadImage';
+import UploadImageContext from '@/app/context/UploadIMageContext';
 
 interface TweetFormProps {
-    onPostTweet: (message: string) => void;
+    onPostTweet: (message: string, image?: File) => void;
 }
 
 const TweetForm = ({ onPostTweet }: TweetFormProps) => {
+    const {
+        createObjectURL, setCreateObjectURL,
+        uploadImage, setUploadImage
+    } = useContext(UploadImageContext);
+
     const [message, setMessage] = useState("");
 
     const messageHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMessage(e.target.value);
     }
 
-    const onPost = () => {
-        onPostTweet(message);
+    const onPost = async () => {
+        await onPostTweet(message, uploadImage);
         setMessage("");
+        setCreateObjectURL("");
     }
 
     const isDisabled = () => !message;

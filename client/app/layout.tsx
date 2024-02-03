@@ -5,6 +5,7 @@ import Navbar from '@/app/components/Navbar';
 import { NextAuthProvider } from './providers/NextAuthProvider';
 import { Suspense } from 'react';
 import Loading from './components/Loading';
+import UploadImageProvider from './providers/UploadImageProvider';
 
 // import AuthContext from './context/UserContext';
 
@@ -22,14 +23,14 @@ export default async function RootLayout({
     <html lang="ja">
       <body>
         {/* <UserProvider> */}
-        <Suspense fallback={<Loading />}>
-          <NextAuthProvider>
-            <Navbar />
+        <NextAuthProvider>
+          <Navbar />
+          <UploadImageProvider>
             <main className="flex min-h-screen flex-col p-5">
               {children}
             </main>
-          </NextAuthProvider>
-        </Suspense>
+          </UploadImageProvider>
+        </NextAuthProvider>
         {/* </UserProvider> */}
       </body>
     </html>

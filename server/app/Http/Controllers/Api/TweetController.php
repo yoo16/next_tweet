@@ -12,6 +12,14 @@ use Illuminate\Support\Facades\Log;
 
 class TweetController extends Controller
 {
+    function find(int $id)
+    {
+        $tweet = Tweet::with('user')
+            ->with('image')
+            ->find($id);
+        return response()->json($tweet);
+    }
+
     function get()
     {
         $tweets = Tweet::with('user')
@@ -26,7 +34,7 @@ class TweetController extends Controller
     {
         $user = User::find($user_id);
         $tweets = Tweet::with('user')
-            ->with('tweet_image')
+            ->with('image')
             ->where('user_id', $user_id)
             ->orderBy('created_at', 'desc')
             ->limit(25)
@@ -40,8 +48,11 @@ class TweetController extends Controller
         $user = $request->user();
         if ($user && $request->user_id == $user->id) {
             $tweet = Tweet::create($request->all());
-            $tweet->user = $user;
-            return response()->json($tweet);
+            if ($image = $request->file('image')) {
+                $path = $image->store('images', 'public');
+                TweetImage::create(['file' => $path, 'tweet_id' => $tweet->id]);
+            }
+            return $this->find($tweet->id);
         } else {
             return response()->json(['error' => 'invalid tweet'], 401);
         }
@@ -54,8 +65,8 @@ class TweetController extends Controller
             Log::debug($request->tweet_id);
             Log::debug($image);
             $path = $image->store('images', 'public');
-            TweetImage::create(['file' => $path, 'tweet_id' => $request->tweet_id]);
-            return response()->json(['path' => $path], 201);
+            $tweet_image = TweetImage::create(['file' => $path, 'tweet_id' => $request->tweet_id]);
+            return response()->json(['tweet_image' => $tweet_image], 201);
         }
     }
 }

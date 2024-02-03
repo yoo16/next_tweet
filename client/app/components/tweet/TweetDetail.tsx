@@ -38,8 +38,12 @@ const TweetDetail = ({ tweet }: TweetDetailProps) => {
                 </div>
                 <div className="flex">
                     {
-                        tweet.image?.map((image) => (
-                            <img className="max-h-64 m-2" key={image.id} src={`http://localhost:8001/storage/${image.file}`} alt="" />
+                        tweet.image && tweet.image?.map((image) => (
+                            <img 
+                            className="max-h-64 m-2" 
+                            key={image.id} 
+                            src={`http://localhost:8001/storage/${image.file}`} 
+                            alt="" />
                         ))
                     }
                 </div>

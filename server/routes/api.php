@@ -12,6 +12,7 @@ Route::middleware('auth:sanctum')
     ->group(function () {
         Route::get('get', [TweetController::class, 'get']);
         Route::get('get/{user_id}', [TweetController::class, 'getByUserId']);
+        Route::get('find/{id}', [TweetController::class, 'find']);
         Route::post('add', [TweetController::class, 'add']);
         Route::post('/user/{id}', [UserController::class, 'get']);
         Route::post('upload_image', [TweetController::class, 'uploadImage']);

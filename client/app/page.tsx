@@ -5,10 +5,11 @@ import { Tweet } from '@/app/models/Tweet';
 import TweetList from '@/app/components/tweet/TweetList';
 import TweetForm from '@/app/components/tweet/TweetForm';
 
-import { getTweets, postTweet } from '@/app/services/TweetService';
+import { getTweets, postTweet, uploadImage } from '@/app/services/TweetService';
 import Loading from './components/Loading';
 import { User, testUser } from './models/User';
 import { useSession } from 'next-auth/react';
+import { TweetImage } from './models/TweetImage';
 // import UserContext from './context/UserContext';
 
 export default function Home() {
@@ -30,9 +31,17 @@ export default function Home() {
     })();
   }, [user]);
 
-  const onPostTweet = async (message: string) => {
-    const newTweet = await postTweet(user, message);
-    newTweet?.id && setTweets(currentTweets => [newTweet, ...currentTweets]);
+  const onPostTweet = async (message: string, image?: File) => {
+    const newTweet = await postTweet(user, message) as Tweet;
+    if (newTweet?.id) {
+      if (image) {
+        const result = await uploadImage(image, newTweet, user.accessToken);
+        const tweetImage:TweetImage = result?.tweet_image;
+        newTweet.image[0] = result?.tweet_image;
+        console.log(result.tweet_image)
+      }
+      setTweets(currentTweets => [newTweet, ...currentTweets]);
+    }
   }
 
   return (

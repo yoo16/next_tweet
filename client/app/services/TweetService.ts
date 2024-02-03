@@ -1,6 +1,7 @@
 const LARAVEL_API_URL = process.env.NEXT_PUBLIC_LARAVEL_API_URL;
 
 import { User } from '@/app/models/User'
+import { Tweet } from '../models/Tweet';
 
 export const getTweets = async (accessToken: string) => {
     if (!accessToken) return;
@@ -53,6 +54,7 @@ export const postTweet = async (user: User, message: string) => {
             headers: {
                 'Authorization': `Bearer ${user.accessToken}`,
                 'Content-Type': 'application/json',
+                // 'Content-Type': 'multipart/form-data',
             },
             body: JSON.stringify({ message, user_id }),
         });
@@ -64,17 +66,20 @@ export const postTweet = async (user: User, message: string) => {
     }
 }
 
-export const uploadImage = async (image:Blob, accessToken:string) => {
+export const uploadImage = async (image: File, tweet:Tweet, accessToken: string) => {
+    if (!image || !tweet) return
     try {
         const formData = new FormData();
-        formData.append("photo", image);
+        formData.append("image", image);
+        formData.append("tweet_id", String(tweet.id));
+        console.log(image)
+        console.log(formData)
 
         const url = LARAVEL_API_URL + "tweet/upload_image";
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'multipart/form-data',
             },
             body: formData,
         });

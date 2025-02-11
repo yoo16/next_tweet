@@ -34,12 +34,6 @@ export default function Home() {
   const onPostTweet = async (message: string, image?: File) => {
     const newTweet = await postTweet(user, message) as Tweet;
     if (newTweet?.id) {
-      if (image) {
-        const result = await uploadImage(image, newTweet, user.accessToken);
-        const tweetImage:TweetImage = result?.tweet_image;
-        newTweet.image[0] = result?.tweet_image;
-        console.log(result.tweet_image)
-      }
       setTweets(currentTweets => [newTweet, ...currentTweets]);
     }
   }

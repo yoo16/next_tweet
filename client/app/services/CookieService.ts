@@ -1,6 +1,6 @@
 "use client"
 
-import Cookies from 'js-cookie';
+import Cookies from '@/node_modules/@types/js-cookie';
 
 export const getAccessToken = () => {
     return Cookies.get('access_token');
